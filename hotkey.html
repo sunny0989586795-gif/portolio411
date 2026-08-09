@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PPT 快捷鍵神助攻 | PowerPoint Helper</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --ppt-orange: #B7472A;
+            --ppt-light: #F3EAE8;
+        }
+        body { background-color: #f9f9f9; font-family: 'Segoe UI', Microsoft JhengHei, sans-serif; }
+        .ppt-gradient { background: linear-gradient(135deg, #d24726 0%, #b7472a 100%); }
+        .card { transition: all 0.2s; }
+        .card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .kbd { 
+            background: #eee; border-radius: 4px; border: 1px solid #ccc;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.2), 0 0 0 2px #fff inset;
+            padding: 2px 6px; font-family: monospace; font-weight: bold; font-size: 0.9em;
+        }
+    </style>
+</head>
+<body class="pb-10">
+
+    <!-- Header -->
+    <header class="ppt-gradient text-white py-8 px-4 shadow-lg mb-8">
+        <div class="max-w-4xl mx-auto text-center">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">
+                <i class="fas fa-file-powerpoint mr-2"></i> PowerPoint 快捷鍵神助攻
+            </h1>
+            <p class="opacity-90">快速查詢 Win / Mac 雙平台簡報製作捷徑</p>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4">
+        
+        <!-- Search Bar -->
+        <div class="relative mb-8">
+            <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            <input type="text" id="searchInput" placeholder="搜尋功能關鍵字 (例如: 播放, 格式, 複製...)" 
+                class="w-full pl-12 pr-4 py-4 rounded-xl border-2 border-gray-200 focus:border-orange-500 focus:outline-none shadow-sm text-lg">
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap gap-2 mb-8 justify-center" id="filterTabs">
+            <button class="filter-btn active bg-orange-600 text-white px-4 py-2 rounded-full text-sm font-medium" data-cat="all">全部</button>
+            <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50" data-cat="播放">簡報播放</button>
+            <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50" data-cat="編輯">編輯管理</button>
+            <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50" data-cat="物件">物件操作</button>
+            <button class="filter-btn bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-50" data-cat="文字">文字格式</button>
+        </div>
+
+        <!-- Shortcut List -->
+        <div id="shortcutGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Data will be injected here by JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-20">
+            <i class="fas fa-robot text-6xl text-gray-300 mb-4"></i>
+            <p class="text-gray-500 text-xl">找不到相關快捷鍵，換個關鍵字試試看？</p>
+        </div>
+
+    </main>
+
+    <script>
+        const shortcuts = [
+            // 播放
+            { cat: "播放", action: "從第一頁開始播放", win: "F5", mac: "Cmd + Shift + Return" },
+            { cat: "播放", action: "從目前頁開始播放", win: "Shift + F5", mac: "Cmd + Return" },
+            { cat: "播放", action: "結束簡報播放", win: "Esc", mac: "Esc" },
+            { cat: "播放", action: "跳至指定頁數", win: "[頁碼] + Enter", mac: "[頁碼] + Return" },
+            { cat: "播放", action: "黑屏 / 恢復", win: "B", mac: "B" },
+            { cat: "播放", action: "白屏 / 恢復", win: "W", mac: "W" },
+            { cat: "播放", action: "切換為畫筆工具", win: "Ctrl + P", mac: "Cmd + P" },
+            { cat: "播放", action: "切換為橡皮擦", win: "Ctrl + E", mac: "Cmd + E" },
+            { cat: "播放", action: "切換回滑鼠指標", win: "Ctrl + A", mac: "Cmd + A" },
+            
+            // 編輯
+            { cat: "編輯", action: "新增投影片", win: "Ctrl + M", mac: "Cmd + Shift + N" },
+            { cat: "編輯", action: "複製目前投影片/物件", win: "Ctrl + D", mac: "Cmd + D" },
+            { cat: "編輯", action: "復原上一步", win: "Ctrl + Z", mac: "Cmd + Z" },
+            { cat: "編輯", action: "重做 / 重複動作", win: "Ctrl + Y / F4", mac: "Cmd + Y" },
+            { cat: "編輯", action: "全選 (文字或物件)", win: "Ctrl + A", mac: "Cmd + A" },
+            
+            // 物件
+            { cat: "物件", action: "群組化物件", win: "Ctrl + G", mac: "Opt + Cmd + G" },
+            { cat: "物件", action: "取消群組", win: "Ctrl + Shift + G", mac: "Opt + Shift + Cmd + G" },
+            { cat: "物件", action: "複製格式 (格式刷)", win: "Ctrl + Shift + C", mac: "Cmd + Shift + C" },
+            { cat: "物件", action: "貼上格式", win: "Ctrl + Shift + V", mac: "Cmd + Shift + V" },
+            { cat: "物件", action: "等比例縮放 (拖曳時)", win: "Shift", mac: "Shift" },
+            { cat: "物件", action: "微調位置 (像素級)", win: "Ctrl + 方向鍵", mac: "Opt + 方向鍵" },
+            
+            // 文字
+            { cat: "文字", action: "文字粗體", win: "Ctrl + B", mac: "Cmd + B" },
+            { cat: "文字", action: "放大字型", win: "Ctrl + Shift + >", mac: "Cmd + Shift + >" },
+            { cat: "文字", action: "縮小字型", win: "Ctrl + Shift + <", mac: "Cmd + Shift + <" },
+            { cat: "文字", action: "文字置中對齊", win: "Ctrl + E", mac: "Cmd + E" },
+            { cat: "文字", action: "同段落內換行", win: "Shift + Enter", mac: "Shift + Return" }
+        ];
+
+        const shortcutGrid = document.getElementById('shortcutGrid');
+        const searchInput = document.getElementById('searchInput');
+        const emptyState = document.getElementById('emptyState');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        let currentFilter = 'all';
+        let searchQuery = '';
+
+        function render() {
+            const filtered = shortcuts.filter(s => {
+                const matchesSearch = s.action.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                     s.cat.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesCat = currentFilter === 'all' || s.cat === currentFilter;
+                return matchesSearch && matchesCat;
+            });
+
+            if (filtered.length === 0) {
+                shortcutGrid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                shortcutGrid.innerHTML = filtered.map(s => `
+                    <div class="card bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="font-bold text-gray-800 text-lg">${s.action}</h3>
+                            <span class="text-xs bg-orange-100 text-orange-700 px-2 py-1 rounded">${s.cat}</span>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-500 text-sm"><i class="fab fa-windows mr-1"></i> Windows</span>
+                                <span class="kbd text-gray-700">${s.win}</span>
+                            </div>
+                            <div class="flex justify-between items-center border-t pt-3">
+                                <span class="text-gray-500 text-sm"><i class="fab fa-apple mr-1"></i> macOS</span>
+                                <span class="kbd text-gray-700">${s.mac}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            render();
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.remove('bg-orange-600', 'text-white'));
+                filterBtns.forEach(b => b.classList.add('bg-white', 'text-gray-600'));
+                btn.classList.remove('bg-white', 'text-gray-600');
+                btn.classList.add('bg-orange-600', 'text-white');
+                
+                currentFilter = btn.dataset.cat;
+                render();
+            });
+        });
+
+        // Initial render
+        render();
+    </script>
+</body>
+</html>
