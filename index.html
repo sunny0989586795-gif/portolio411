@@ -219,10 +219,11 @@
             <span class="font-bold text-[#244837] tracking-wider flex items-center gap-2">
                 <span class="w-3 h-3 rounded-full bg-[#528D73]"></span>數位行政專員
             </span>
-            <div class="space-x-4 md:space-x-6 text-sm md:text-base font-medium">
+            <div class="space-x-3 md:space-x-6 text-sm md:text-base font-medium">
                 <a href="#about" class="text-[#244837] hover:text-[#528D73] transition">關於我</a>
                 <a href="#skills" class="text-[#244837] hover:text-[#528D73] transition">核心技能</a>
                 <a href="#certificates" class="text-[#244837] hover:text-[#528D73] transition">專業證照</a>
+                <a href="#portal" class="text-[#244837] hover:text-[#528D73] transition">專案入口</a>
                 <a href="#works" class="text-[#244837] hover:text-[#528D73] transition">作品成果</a>
                 <a href="#contact" class="text-[#244837] hover:text-[#528D73] transition">聯絡方式</a>
             </div>
@@ -232,7 +233,7 @@
     <div class="container max-w-[850px] mx-auto px-5 py-12 md:py-16">
         <header class="text-center mb-16">
             <div class="profile-photo-wrapper">
-                <img src="https://via.placeholder.com/400" alt="個人照" class="profile-photo" onerror="this.src='https://placehold.co/400x400/244837/ffffff?text=Professional+Photo'">
+                <img src="https://raw.githubusercontent.com/sunny0989586795-gif/portolio411/main/avatar.jpg" alt="個人照" class="profile-photo" onerror="this.src='https://placehold.co/400x400/244837/ffffff?text=Professional+Photo'">
             </div>
             <h1 class="text-3xl md:text-[2.6rem] font-bold text-[#244837] tracking-wider mb-2">[您的姓名]</h1>
             <p class="text-lg text-[#528D73] font-medium bg-[#F2F9F5] inline-block px-4 py-1 rounded-full border border-[#bce1ce]">行政檢驗經驗 ✕ 數位辦公 AI 應用</p>
@@ -302,10 +303,30 @@
             </div>
         </section>
 
+        <section id="portal" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-3 relative section-title">精選專案快速入口</h2>
+            <p class="text-center text-sm text-[#456E5C] mb-8">點擊下方大按鈕即可前往其他專案與互動頁面</p>
+            
+            <div class="max-w-xl mx-auto">
+                <a href="https://github.com/sunny0989586795-gif/portolio411/blob/main/snake1.html" target="_blank" 
+                   class="group relative bg-[#244837] hover:bg-[#3E294E] text-white p-8 rounded-3xl shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex items-center justify-between border-2 border-[#528D73]">
+                    <div class="flex items-center gap-6">
+                        <span class="text-4xl bg-white/15 p-4 rounded-2xl shadow-inner">🎮</span>
+                        <div>
+                            <span class="text-xs tracking-widest text-[#FDF3D8] font-semibold uppercase block mb-1">Interactive Web Project</span>
+                            <h3 class="text-xl md:text-2xl font-bold group-hover:text-[#FDF3D8] transition">網頁互動貪吃蛇遊戲 (Snake)</h3>
+                            <p class="text-xs md:text-sm text-[#bce1ce] mt-1">點擊前往 GitHub 檢視完整原始碼與預覽</p>
+                        </div>
+                    </div>
+                    <span class="text-3xl text-[#FDF3D8] transform group-hover:translate-x-2 transition-transform font-bold p-2">→</span>
+                </a>
+            </div>
+        </section>
+
         <section id="works" class="mb-16 scroll-mt-24">
             <h2 class="text-2xl font-bold text-[#244837] text-center mb-9 relative section-title">職訓作品成果</h2>
-            <p class="text-center text-sm text-[#456E5C] mb-6">點擊卡片查看詳細說明與專案亮點</p>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <p class="text-center text-sm text-[#456E5C] mb-6">點擊卡片查看詳細說明與專案連結</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                 <div class="work-item" onclick="openProjectModal('Excel 商品銷售自動化分析報表', '運用進階 Excel 函數（如 INDEX, MATCH, XLOOKUP）與樞紐分析表，打造自動化銷售報表，減少 50% 的人工對帳時間。')">
                     <span class="text-2xl mb-2">📊</span>
                     <span>Excel 商品銷售<br>自動化分析報表</span>
@@ -317,6 +338,10 @@
                 <div class="work-item" onclick="openProjectModal('多表連結與 INDEX 函數應用實作', '串聯多張不同部門的庫存與考勤報表，透過動態選單與公式連動，達到一鍵產出月度彙整總表的實用工具。')">
                     <span class="text-2xl mb-2">🔗</span>
                     <span>多表連結與<br>INDEX 函數應用實作</span>
+                </div>
+                <div class="work-item" onclick="openProjectModalWithLink('網頁互動貪吃蛇遊戲 (Snake)', '運用 HTML5 Canvas 與 JavaScript 獨立開發的經典貪吃蛇遊戲，支援鍵盤控制與即時計分，展現前端互動與程式邏輯整合能力。', 'https://github.com/sunny0989586795-gif/portolio411/blob/main/snake1.html')">
+                    <span class="text-2xl mb-2">🎮</span>
+                    <span>網頁互動貪吃蛇<br>遊戲實作 (Snake)</span>
                 </div>
             </div>
         </section>
@@ -347,7 +372,8 @@
                 <img id="modalImage" src="" alt="證書預覽" class="w-full h-auto rounded-xl border border-[#bce1ce] object-cover aspect-[16/10]">
             </div>
             <p id="modalDesc" class="text-[#2E4F41] leading-relaxed mb-6">詳細說明內容...</p>
-            <div class="text-right">
+            <div class="flex justify-between items-center">
+                <div id="modalExternalLinkContainer"></div>
                 <button onclick="closeModal()" class="bg-[#528D73] text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-[#43755e] transition">關閉視窗</button>
             </div>
         </div>
@@ -360,10 +386,31 @@
             const modal = document.getElementById('projectModal');
             const container = document.getElementById('modalContainer');
             const imgContainer = document.getElementById('modalImageContainer');
+            const extLinkContainer = document.getElementById('modalExternalLinkContainer');
             
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalDesc').innerText = description;
             imgContainer.classList.add('hidden');
+            extLinkContainer.innerHTML = '';
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                container.classList.remove('scale-95');
+                container.classList.add('scale-100');
+            }, 10);
+        }
+
+        function openProjectModalWithLink(title, description, url) {
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+            const imgContainer = document.getElementById('modalImageContainer');
+            const extLinkContainer = document.getElementById('modalExternalLinkContainer');
+            
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = description;
+            imgContainer.classList.add('hidden');
+            extLinkContainer.innerHTML = `<a href="${url}" target="_blank" class="text-sm font-bold text-[#528D73] hover:underline flex items-center gap-1">🔗 前往 GitHub 查看程式碼</a>`;
             
             modal.classList.remove('hidden');
             setTimeout(() => {
@@ -378,11 +425,13 @@
             const container = document.getElementById('modalContainer');
             const imgContainer = document.getElementById('modalImageContainer');
             const modalImg = document.getElementById('modalImage');
+            const extLinkContainer = document.getElementById('modalExternalLinkContainer');
             
             document.getElementById('modalTitle').innerText = title;
             document.getElementById('modalDesc').innerText = description;
             modalImg.src = imgSrc;
             imgContainer.classList.remove('hidden');
+            extLinkContainer.innerHTML = '';
             
             modal.classList.remove('hidden');
             setTimeout(() => {
