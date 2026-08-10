@@ -1,381 +1,455 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio - 專業行政與數位應用人才</title>
-    <!-- Tailwind CSS CDN -->
+    <title>個人介紹 | 數位行政專業</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts Inter & Playfair Display / Noto Sans TC -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', 'Noto Sans TC', sans-serif;
-            background-color: #F8F9FA;
-            color: #2D3748;
+        :root {
+            --bg-color: #E2F2EC;        /* 柔和清新薄荷綠底色 */
+            --primary-green: #528D73;   /* 葉片質感賽格綠 */
+            --dark-green: #244837;      /* 深森林綠標題與文字 */
+            --accent-cream: #FDF3D8;    /* 淡米黃花朵點綴色 */
+            --card-bg: #FFFFFF;
+            --text-color: #2E4F41;
         }
-        .font-serif-custom {
-            font-family: 'Playfair Display', serif;
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.4) 0%, transparent 40%);
+        }
+
+        .profile-photo-wrapper {
+            width: 240px;
+            height: 240px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 6px solid var(--card-bg);
+            box-shadow: 0 12px 30px rgba(36, 72, 55, 0.12);
+            background-color: #eee;
+            transition: transform 0.5s ease;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.03);
+        }
+
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--primary-green);
+            margin: 12px auto 0;
+            border-radius: 2px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 8px 25px rgba(36, 72, 55, 0.05);
+            text-align: justify;
+            border: 1px solid rgba(82, 141, 115, 0.15);
+        }
+
+        .skill-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 18px;
+            text-align: center;
+            border-bottom: 5px solid var(--primary-green);
+            box-shadow: 0 6px 20px rgba(36, 72, 55, 0.04);
+            border-left: 1px solid rgba(82, 141, 115, 0.15);
+            border-right: 1px solid rgba(82, 141, 115, 0.15);
+            border-top: 1px solid rgba(82, 141, 115, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .skill-box:hover {
+            transform: translateY(-10px);
+            background: #3E294E;
+            color: #FFFFFF;
+            border-bottom: 5px solid #9D75B2;
+            border-color: rgba(157, 117, 178, 0.3);
+            box-shadow: 0 16px 35px rgba(62, 41, 78, 0.3);
+        }
+
+        .skill-box:hover h3 {
+            color: #FDF3D8;
+        }
+
+        .skill-box:hover p {
+            color: #F0E6F5;
+        }
+
+        .cert-item {
+            background: var(--card-bg);
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(82, 141, 115, 0.15);
+            box-shadow: 0 6px 20px rgba(36, 72, 55, 0.04);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cert-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(82, 141, 115, 0.2);
+            border-color: var(--primary-green);
+        }
+
+        .cert-img-wrapper {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            background: #F2F9F5;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cert-img-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .cert-item:hover .cert-img-wrapper img {
+            transform: scale(1.05);
+        }
+
+        .work-item {
+            aspect-ratio: 16 / 9;
+            background: #F2F9F5;
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            text-align: center;
+            color: var(--dark-green);
+            border: 1px solid #bce1ce;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .work-item:hover {
+            background: #e2f3eb;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(82, 141, 115, 0.2);
+        }
+
+        .contact-box {
+            background: var(--dark-green);
+            color: #FFFFFF;
+            padding: 50px 30px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(36, 72, 55, 0.15);
+        }
+
+        .contact-box a {
+            color: #FDF3D8;
+            font-weight: bold;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(253, 243, 216, 0.6);
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .contact-box a:hover {
+            opacity: 0.8;
+        }
+
+        #toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: var(--dark-green);
+            color: #fff;
+            text-align: center;
+            border-radius: 12px;
+            padding: 14px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            font-size: 0.95rem;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 2.2rem; }
+            .profile-photo-wrapper { width: 200px; height: 200px; }
+            .container { padding: 40px 15px; }
+            .card { padding: 30px 20px; }
         }
     </style>
 </head>
-<body class="bg-[#F8F9FA] text-slate-800 antialiased selection:bg-teal-100 selection:text-teal-800">
+<body class="bg-[#E2F2EC] text-[#2E4F41]">
 
-    <!-- Header / Navbar -->
-    <header class="sticky top-0 z-50 bg-[#F8F9FA]/90 backdrop-blur-md border-b border-stone-200/80">
-        <div class="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <!-- Tiny teal grid accent icon like reference -->
-                <div class="grid grid-cols-2 gap-0.5 w-4 h-4">
-                    <div class="bg-teal-500 rounded-xs"></div>
-                    <div class="bg-teal-200 rounded-xs"></div>
-                    <div class="bg-teal-200 rounded-xs"></div>
-                    <div class="bg-teal-600 rounded-xs"></div>
-                </div>
-                <span class="font-serif-custom font-bold tracking-widest text-stone-900 text-sm uppercase">PORTFOLIO</span>
+    <nav class="sticky top-0 z-50 bg-[#E2F2EC]/90 backdrop-blur-md border-b border-[#bce1ce] py-4 px-6">
+        <div class="max-w-[850px] mx-auto flex justify-between items-center">
+            <span class="font-bold text-[#244837] tracking-wider flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#528D73]"></span>數位行政專員
+            </span>
+            <div class="space-x-4 md:space-x-6 text-sm md:text-base font-medium">
+                <a href="#about" class="text-[#244837] hover:text-[#528D73] transition">關於我</a>
+                <a href="#skills" class="text-[#244837] hover:text-[#528D73] transition">核心技能</a>
+                <a href="#certificates" class="text-[#244837] hover:text-[#528D73] transition">專業證照</a>
+                <a href="#works" class="text-[#244837] hover:text-[#528D73] transition">作品成果</a>
+                <a href="#contact" class="text-[#244837] hover:text-[#528D73] transition">聯絡方式</a>
             </div>
-            <nav class="hidden md:flex space-x-8 text-xs font-semibold tracking-wider uppercase text-stone-600">
-                <a href="#about" class="hover:text-teal-700 transition-colors">01 / About</a>
-                <a href="#skills" class="hover:text-teal-700 transition-colors">02 / Skills</a>
-                <a href="#projects" class="hover:text-teal-700 transition-colors">03 / Projects</a>
-                <a href="#contact" class="hover:text-teal-700 transition-colors">04 / Contact</a>
-            </nav>
         </div>
-    </header>
+    </nav>
 
-    <main class="max-w-5xl mx-auto px-6 py-12 space-y-24">
-
-        <!-- Hero Section styled like the reference magazine cover layout -->
-        <section id="hero" class="pt-8 md:pt-16 pb-12 relative">
-            <!-- Decorative teal accent squares -->
-            <div class="absolute right-6 top-0 hidden md:grid grid-cols-2 gap-1 w-8 h-8 opacity-80">
-                <div class="bg-teal-400"></div>
-                <div class="bg-teal-100"></div>
-                <div class="bg-teal-100"></div>
-                <div class="bg-teal-600"></div>
+    <div class="container max-w-[850px] mx-auto px-5 py-12 md:py-16">
+        <header class="text-center mb-16">
+            <div class="profile-photo-wrapper">
+                <img src="https://via.placeholder.com/400" alt="個人照" class="profile-photo" onerror="this.src='https://placehold.co/400x400/244837/ffffff?text=Professional+Photo'">
             </div>
+            <h1 class="text-3xl md:text-[2.6rem] font-bold text-[#244837] tracking-wider mb-2">[您的姓名]</h1>
+            <p class="text-lg text-[#528D73] font-medium bg-[#F2F9F5] inline-block px-4 py-1 rounded-full border border-[#bce1ce]">行政檢驗經驗 ✕ 數位辦公 AI 應用</p>
+        </header>
 
-            <div class="text-center md:text-left">
-                <p class="text-xs font-bold tracking-[0.3em] uppercase text-teal-700 mb-3">Creative Artwork Portfolio</p>
-                <h1 class="text-4xl md:text-6xl font-serif-custom font-bold tracking-tight text-stone-900 mb-6 uppercase">
-                    Professional <br/><span class="text-teal-700 italic font-normal">Profile</span>
-                </h1>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center mt-8 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-stone-200/60 relative overflow-hidden">
-                <!-- Subtle background watermark -->
-                <div class="absolute -right-10 -bottom-10 text-9xl font-serif-custom font-bold text-teal-50/50 pointer-events-none select-none">
-                    01
-                </div>
-
-                <div class="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left">
-                    <div class="w-32 h-32 rounded-full bg-teal-50 border-4 border-teal-500/30 flex items-center justify-center shadow-md overflow-hidden mb-4">
-                        <img src="https://placehold.co/300x300/0f4c3a/ffffff?text=Photo" alt="個人頭像照片" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e2e8f0/1e293b?text=Avatar'">
-                    </div>
-                    <h3 class="font-serif-custom font-bold text-xl text-stone-900">求職者個人檔案</h3>
-                    <p class="text-xs text-teal-700 font-semibold uppercase tracking-wider mt-1">Administrative & Digital Specialist</p>
-                </div>
-
-                <div class="md:col-span-8 space-y-4 border-t md:border-t-0 md:border-l border-stone-100 pt-6 md:pt-0 md:pl-8">
-                    <h2 class="text-xl md:text-2xl font-serif-custom font-bold text-stone-900 leading-snug">
-                        細心負責的行政與數位辦公人才
-                    </h2>
-                    <p class="text-stone-600 font-light leading-relaxed text-sm md:text-base">
-                        結合行政、檢驗的嚴謹經驗，與健行科大數位辦公及AI應用實務訓練，致力於提升工作效率、資料處理品質與現代化辦公流程。
-                    </p>
-                    <div class="pt-4 flex flex-wrap gap-4">
-                        <a href="#contact" class="px-6 py-2.5 rounded-full bg-teal-700 text-white text-sm font-medium hover:bg-teal-800 transition-all shadow-sm">
-                            Get in Touch
-                        </a>
-                        <a href="#projects" class="px-6 py-2.5 rounded-full bg-teal-50 text-teal-800 text-sm font-medium hover:bg-teal-100 transition-all">
-                            View Works
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- About Section -->
-        <section id="about" class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-stone-200/60">
-            <div class="md:col-span-4 border-b md:border-b-0 md:border-r border-stone-100 pb-6 md:pb-0 md:pr-8">
-                <span class="text-xs font-bold tracking-widest text-teal-700 uppercase">01 / Background</span>
-                <h2 class="text-3xl font-serif-custom font-bold text-stone-900 mt-2">關於我</h2>
-                <p class="text-xs text-stone-400 mt-1">Experience & Growth</p>
-            </div>
-            <div class="md:col-span-8 space-y-4 text-stone-700 font-light leading-relaxed text-sm md:text-base">
+        <section id="about" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-9 relative section-title">關於我</h2>
+            <div class="card">
                 <p>
-                    我過去曾從事行政助理及檢驗人員相關工作，累積了不同領域的職場經驗。在行政助理的歷練中，熟悉文件處理、資料整理及日常行政事務，培養良好的溝通與條理感；在檢驗人員的崗位上，格外重視細節與準確性，養成嚴謹核對資料的習慣。
+                    過去在行政助理與檢驗人員的工作中，我累積了跨領域的豐富經驗，並磨練出<b>細心、耐心與高度責任感</b>。我擅長有條理地處理行政庶務，並能嚴謹遵循標準流程確保工作的準確性。
                 </p>
-                <p>
-                    為跟上現代職場需求，我參與健行科技大學「數位辦公與AI應用實務」職訓課程，進一步強化 Word、Excel、PowerPoint 等辦公工具，並學會運用 AI 協助日常辦公、文字修改與資料整理，大幅提升工作效率。
+                <p class="mt-4">
+                    透過「數位辦公與AI應用實務」職訓，我精進了 <b>Excel 進階數據分析</b>（如 INDEX 函數、多表整理、自動化選單）與 AI 應用效能，將智慧科技融入日常行政。我是一位熱衷學習、做事認真的工作者，期待在未來的崗位上貢獻專業，成為團隊信賴的夥伴。
                 </p>
-                <div class="pt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-stone-600 border-t border-stone-100">
-                    <div><strong class="text-stone-900 font-medium">學歷背景：</strong> 醒吾高職</div>
-                    <div><strong class="text-stone-900 font-medium">工作經歷：</strong> 行政人員、檢驗人員、服務人員</div>
+            </div>
+        </section>
+
+        <section id="skills" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-9 relative section-title">核心技能</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="skill-box">
+                    <h3 class="text-[#244837] font-bold text-lg mb-3">專業文書行政</h3>
+                    <p class="text-sm text-[#3E6353]">精通 Word、PPT 操作，具備高效的文件組織與資料整理實務能力。</p>
+                </div>
+                <div class="skill-box">
+                    <h3 class="text-[#244837] font-bold text-lg mb-3">Excel 數據管理</h3>
+                    <p class="text-sm text-[#3E6353]">熟練函數運用、自動化選單設計與多張工作表之數據整合分析。</p>
+                </div>
+                <div class="skill-box">
+                    <h3 class="text-[#244837] font-bold text-lg mb-3">AI 效率應用</h3>
+                    <p class="text-sm text-[#3E6353]">善用 AI 進行資料彙整、文字修飾與內容發想，大幅提升工作產出品質。</p>
                 </div>
             </div>
         </section>
 
-        <!-- Skills Section -->
-        <section id="skills" class="space-y-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-stone-200 pb-4">
-                <div>
-                    <span class="text-xs font-bold tracking-widest text-teal-700 uppercase">02 / Expertise</span>
-                    <h2 class="text-3xl font-serif-custom font-bold text-stone-900 mt-1">核心專業技能</h2>
-                </div>
-                <p class="text-xs text-stone-500 mt-2 md:mt-0">Digital Office & Quality Control</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Skill 1 -->
-                <div class="bg-white p-8 rounded-3xl border border-stone-200/60 shadow-sm hover:bg-teal-900 hover:text-white hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group flex flex-col justify-between cursor-pointer">
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center font-serif-custom font-bold text-lg mb-6 group-hover:bg-white/10 group-hover:text-white transition-colors">01</div>
-                        <h3 class="font-serif-custom font-bold text-stone-900 group-hover:text-white text-lg mb-3 transition-colors">進階辦公與 Excel 應用</h3>
-                        <p class="text-xs text-stone-600 group-hover:text-teal-50 font-light leading-relaxed transition-colors">
-                            熟練掌握 Excel 資料整理、函數運用、INDEX 函數、下拉式選單及多張工作表整合，並精通 Word 與 PowerPoint 文件排版。
-                        </p>
+        <section id="certificates" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-9 relative section-title">專業證照</h2>
+            <p class="text-center text-sm text-[#456E5C] mb-6">點擊證照卡片可查看證書大圖與詳細說明</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="cert-item" onclick="openCertModal('數位辦公應用實務證照', '本證照證明在現代數位辦公環境中，具備高效運用文書處理軟體與雲端協作工具之專業能力，能有效提升團隊行政效率。', 'https://placehold.co/600x400/528D73/ffffff?text=Digital+Office+Certificate')">
+                    <div class="cert-img-wrapper">
+                        <img src="https://placehold.co/600x400/528D73/ffffff?text=Certificate+1" alt="數位辦公應用實務證照" onerror="this.src='https://placehold.co/600x400/528D73/ffffff?text=Certificate+1'">
                     </div>
-                    <div class="mt-6 pt-4 border-t border-stone-100 group-hover:border-white/20 text-[11px] text-teal-700 group-hover:text-teal-200 font-semibold tracking-wider uppercase transition-colors">
-                        Spreadsheet / Office
+                    <div class="p-5">
+                        <h3 class="text-[#244837] font-bold text-base mb-1">數位辦公應用實務證照</h3>
+                        <p class="text-xs text-[#528D73]">點擊檢視證書詳情</p>
                     </div>
                 </div>
-
-                <!-- Skill 2 -->
-                <div class="bg-white p-8 rounded-3xl border border-stone-200/60 shadow-sm hover:bg-teal-900 hover:text-white hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group flex flex-col justify-between cursor-pointer">
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center font-serif-custom font-bold text-lg mb-6 group-hover:bg-white/10 group-hover:text-white transition-colors">02</div>
-                        <h3 class="font-serif-custom font-bold text-stone-900 group-hover:text-white text-lg mb-3 transition-colors">AI 數位工具實務應用</h3>
-                        <p class="text-xs text-stone-600 group-hover:text-teal-50 font-light leading-relaxed transition-colors">
-                            透過職訓課程實際接觸 AI 工具，能運用人工智慧協助日常資料整理、修改文字與發想內容，具備快速適應與學習新科技的能力。
-                        </p>
+                <div class="cert-item" onclick="openCertModal('Excel 進階數據分析師', '具備處理複雜資料表、進階函數（INDEX, MATCH, XLOOKUP）以及自動化報表設計之專業認證，確保企業數據管理精準無誤。', 'https://placehold.co/600x400/3E294E/ffffff?text=Excel+Data+Certificate')">
+                    <div class="cert-img-wrapper">
+                        <img src="https://placehold.co/600x400/3E294E/ffffff?text=Certificate+2" alt="Excel 進階數據分析師" onerror="this.src='https://placehold.co/600x400/3E294E/ffffff?text=Certificate+2'">
                     </div>
-                    <div class="mt-6 pt-4 border-t border-stone-100 group-hover:border-white/20 text-[11px] text-teal-700 group-hover:text-teal-200 font-semibold tracking-wider uppercase transition-colors">
-                        Artificial Intelligence
+                    <div class="p-5">
+                        <h3 class="text-[#244837] font-bold text-base mb-1">Excel 進階數據分析師</h3>
+                        <p class="text-xs text-[#528D73]">點擊檢視證書詳情</p>
                     </div>
                 </div>
-
-                <!-- Skill 3 -->
-                <div class="bg-white p-8 rounded-3xl border border-stone-200/60 shadow-sm hover:bg-teal-900 hover:text-white hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group flex flex-col justify-between cursor-pointer">
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-teal-50 text-teal-700 flex items-center justify-center font-serif-custom font-bold text-lg mb-6 group-hover:bg-white/10 group-hover:text-white transition-colors">03</div>
-                        <h3 class="font-serif-custom font-bold text-stone-900 group-hover:text-white text-lg mb-3 transition-colors">嚴謹細心與跨領域協調</h3>
-                        <p class="text-xs text-stone-600 group-hover:text-teal-50 font-light leading-relaxed transition-colors">
-                            具備檢驗人員養成的細節敏感度與正確性要求，搭配行政人員的溝通組織能力，做事認真負責且重視工作品質。
-                        </p>
+                <div class="cert-item" onclick="openCertModal('AI 協作與行政優化專員', '熟練運用生成式 AI 工具進行工作流程自動化、提示詞設計及行政企劃書編撰，引領辦公室智慧化轉型。', 'https://placehold.co/600x400/244837/ffffff?text=AI+Workspace+Certificate')">
+                    <div class="cert-img-wrapper">
+                        <img src="https://placehold.co/600x400/244837/ffffff?text=Certificate+3" alt="AI 協作與行政優化專員" onerror="this.src='https://placehold.co/600x400/244837/ffffff?text=Certificate+3'">
                     </div>
-                    <div class="mt-6 pt-4 border-t border-stone-100 group-hover:border-white/20 text-[11px] text-teal-700 group-hover:text-teal-200 font-semibold tracking-wider uppercase transition-colors">
-                        Quality Control / Admin
-                    </div>
-                </div>
-            </div>
-
-            <!-- Certifications Sub-Section -->
-            <div class="mt-12 pt-8 border-t border-stone-200">
-                <div class="flex items-center justify-between mb-6">
-                    <div>
-                        <h3 class="font-serif-custom font-bold text-xl text-stone-900">專業證照與結業證明</h3>
-                        <p class="text-xs text-stone-500 mt-1">點擊下方證照卡片可檢視證書詳細內容與說明</p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Cert 1 -->
-                    <div onclick="openCertModal('數位辦公與AI應用實務 結業證書', '健行科技大學職訓結業證書', 'https://placehold.co/600x400/0f4c3a/ffffff?text=Certificate+1:+AI+Office', '完成健行科技大學「數位辦公與AI應用實務」專業培訓課程，總計時數 300 小時。熟練掌握進階 Excel 資料處理、函數應用、商務文書排版及生成式 AI 工具之實務協作能力。')" 
-                         class="bg-white p-6 rounded-3xl border border-stone-200/60 shadow-sm hover:border-teal-700 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between">
-                        <div>
-                            <div class="h-36 bg-teal-50 rounded-2xl mb-4 overflow-hidden relative border border-teal-100 flex items-center justify-center">
-                                <img src="https://placehold.co/400x250/0f4c3a/ffffff?text=Certificate+Thumbnail+1" alt="證照縮圖" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                <div class="absolute inset-0 bg-teal-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
-                                    點擊檢視證書 &rarr;
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-semibold text-teal-700 tracking-widest uppercase">Certification 01</span>
-                            <h4 class="font-serif-custom font-bold text-stone-900 text-base mt-1">數位辦公與 AI 應用結業證書</h4>
-                        </div>
-                        <p class="text-xs text-stone-500 font-light mt-3">健行科技大學 • 專業職訓結業</p>
-                    </div>
-
-                    <!-- Cert 2 -->
-                    <div onclick="openCertModal('TQC+ 電腦文書專業認證', 'TQC+ 企業進階辦公應用', 'https://placehold.co/600x400/1e293b/ffffff?text=Certificate+2:+TQC+Office', '具備國家級或專業機構認可之電腦文書處理能力，精通 Word 長篇報告排版、Excel 複雜表格運算與資料庫樞紐分析應用。')" 
-                         class="bg-white p-6 rounded-3xl border border-stone-200/60 shadow-sm hover:border-teal-700 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between">
-                        <div>
-                            <div class="h-36 bg-stone-100 rounded-2xl mb-4 overflow-hidden relative border border-stone-200 flex items-center justify-center">
-                                <img src="https://placehold.co/400x250/1e293b/ffffff?text=Certificate+Thumbnail+2" alt="證照縮圖" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                <div class="absolute inset-0 bg-teal-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
-                                    點擊檢視證書 &rarr;
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-semibold text-teal-700 tracking-widest uppercase">Certification 02</span>
-                            <h4 class="font-serif-custom font-bold text-stone-900 text-base mt-1">TQC+ 電腦文書與試算表專業認證</h4>
-                        </div>
-                        <p class="text-xs text-stone-500 font-light mt-3">專業技能檢定 • 辦公應用</p>
-                    </div>
-
-                    <!-- Cert 3 -->
-                    <div onclick="openCertModal('品質檢驗與行政管理專業訓練', '品管檢驗及行政資料核對實務', 'https://placehold.co/600x400/0f766e/ffffff?text=Certificate+3:+Quality+Control', '具備過去檢驗員工作所累積之標準化作業流程（SOP）訓練證明，熟悉嚴謹的數據核對、品質異常處理與跨部門行政溝通協調能力。')" 
-                         class="bg-white p-6 rounded-3xl border border-stone-200/60 shadow-sm hover:border-teal-700 hover:-translate-y-1 transition-all duration-300 cursor-pointer group flex flex-col justify-between">
-                        <div>
-                            <div class="h-36 bg-teal-50 rounded-2xl mb-4 overflow-hidden relative border border-teal-100 flex items-center justify-center">
-                                <img src="https://placehold.co/400x250/0f766e/ffffff?text=Certificate+Thumbnail+3" alt="證照縮圖" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-                                <div class="absolute inset-0 bg-teal-900/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-semibold">
-                                    點擊檢視證書 &rarr;
-                                </div>
-                            </div>
-                            <span class="text-[10px] font-semibold text-teal-700 tracking-widest uppercase">Certification 03</span>
-                            <h4 class="font-serif-custom font-bold text-stone-900 text-base mt-1">品質檢驗與行政管理訓練證明</h4>
-                        </div>
-                        <p class="text-xs text-stone-500 font-light mt-3">職場專業實務 • 品管與行政</p>
+                    <div class="p-5">
+                        <h3 class="text-[#244837] font-bold text-base mb-1">AI 協作與行政優化專員</h3>
+                        <p class="text-xs text-[#528D73]">點擊檢視證書詳情</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Projects Section -->
-        <section id="projects" class="space-y-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-stone-200 pb-4">
-                <div>
-                    <span class="text-xs font-bold tracking-widest text-teal-700 uppercase">03 / Works & Projects</span>
-                    <h2 class="text-3xl font-serif-custom font-bold text-stone-900 mt-1">專案與實作展示</h2>
+        <section id="works" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-9 relative section-title">職訓作品成果</h2>
+            <p class="text-center text-sm text-[#456E5C] mb-6">點擊卡片查看詳細說明與專案亮點</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="work-item" onclick="openProjectModal('Excel 商品銷售自動化分析報表', '運用進階 Excel 函數（如 INDEX, MATCH, XLOOKUP）與樞紐分析表，打造自動化銷售報表，減少 50% 的人工對帳時間。')">
+                    <span class="text-2xl mb-2">📊</span>
+                    <span>Excel 商品銷售<br>自動化分析報表</span>
                 </div>
-                <p class="text-xs text-stone-500 mt-2 md:mt-0">Practical Training Outputs</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Project 1 -->
-                <div class="bg-white rounded-3xl overflow-hidden border border-stone-200/60 shadow-sm flex flex-col group">
-                    <div class="h-48 bg-gradient-to-br from-teal-900 to-teal-700 p-6 flex flex-col justify-between relative overflow-hidden">
-                        <div class="absolute -right-4 -bottom-4 text-6xl text-white/10 font-serif-custom font-bold">01</div>
-                        <span class="text-[10px] font-semibold text-teal-200 tracking-widest uppercase">Excel Module</span>
-                        <h3 class="text-white font-serif-custom font-bold text-lg">商品銷售與多表整合</h3>
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
-                        <p class="text-xs text-stone-600 font-light leading-relaxed">
-                            運用 Excel 函數、下拉式選單及多工作表合併技術，建構自動化商品銷售分析與清單對照範本。
-                        </p>
-                        <div class="pt-2 flex items-center justify-between text-xs text-teal-700 font-medium">
-                            <span>Data Processing</span>
-                            <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
-                        </div>
-                    </div>
+                <div class="work-item" onclick="openProjectModal('AI 協作辦公行政企劃案', '結合 ChatGPT 提示詞工程進行跨部門行政流程優化企劃，產出結構完整、具可行性的標準作業程序（SOP）。')">
+                    <span class="text-2xl mb-2">🤖</span>
+                    <span>AI 協作<br>辦公行政企劃案</span>
                 </div>
-
-                <!-- Project 2 -->
-                <div class="bg-white rounded-3xl overflow-hidden border border-stone-200/60 shadow-sm flex flex-col group">
-                    <div class="h-48 bg-gradient-to-br from-stone-800 to-teal-900 p-6 flex flex-col justify-between relative overflow-hidden">
-                        <div class="absolute -right-4 -bottom-4 text-6xl text-white/10 font-serif-custom font-bold">02</div>
-                        <span class="text-[10px] font-semibold text-teal-200 tracking-widest uppercase">AI Integration</span>
-                        <h3 class="text-white font-serif-custom font-bold text-lg">AI 輔助行政優化流程</h3>
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
-                        <p class="text-xs text-stone-600 font-light leading-relaxed">
-                            結合 AI 協作工具，自動化修訂行政文件草稿與結構化日常繁雜資料，有效提升辦公室產出效率。
-                        </p>
-                        <div class="pt-2 flex items-center justify-between text-xs text-teal-700 font-medium">
-                            <span>Workflow Optimization</span>
-                            <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Project 3 -->
-                <div class="bg-white rounded-3xl overflow-hidden border border-stone-200/60 shadow-sm flex flex-col group">
-                    <div class="h-48 bg-gradient-to-br from-teal-800 to-slate-800 p-6 flex flex-col justify-between relative overflow-hidden">
-                        <div class="absolute -right-4 -bottom-4 text-6xl text-white/10 font-serif-custom font-bold">03</div>
-                        <span class="text-[10px] font-semibold text-teal-200 tracking-widest uppercase">Quality Assurance</span>
-                        <h3 class="text-white font-serif-custom font-bold text-lg">標準化檢核與行政表單</h3>
-                    </div>
-                    <div class="p-6 flex flex-col flex-grow justify-between space-y-4">
-                        <p class="text-xs text-stone-600 font-light leading-relaxed">
-                            融合過去檢驗工作的精確流程習慣，設計零失誤率的辦公室文件核對機制與標準範本。
-                        </p>
-                        <div class="pt-2 flex items-center justify-between text-xs text-teal-700 font-medium">
-                            <span>Standardization</span>
-                            <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
-                        </div>
-                    </div>
+                <div class="work-item" onclick="openProjectModal('多表連結與 INDEX 函數應用實作', '串聯多張不同部門的庫存與考勤報表，透過動態選單與公式連動，達到一鍵產出月度彙整總表的實用工具。')">
+                    <span class="text-2xl mb-2">🔗</span>
+                    <span>多表連結與<br>INDEX 函數應用實作</span>
                 </div>
             </div>
         </section>
 
-        <!-- Contact Section -->
-        <section id="contact" class="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-stone-200/60 text-center relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-teal-400 via-teal-600 to-teal-800"></div>
-            <span class="text-xs font-bold tracking-widest text-teal-700 uppercase">04 / Get in Touch</span>
-            <h2 class="text-3xl font-serif-custom font-bold text-stone-900 mt-2 mb-3">聯絡方式</h2>
-            <p class="text-stone-600 font-light text-sm max-w-md mx-auto mb-8">
-                如果您正在尋找細心負責、具備數位辦公與行政經驗的工作夥伴，歡迎隨時與我聯繫！
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 text-xs font-medium text-stone-700">
-                <div class="flex items-center gap-2 bg-[#F8F9FA] px-6 py-3 rounded-2xl border border-stone-200/80">
-                    <span class="text-teal-700 font-bold">Email:</span> example@email.com
-                </div>
-                <div class="flex items-center gap-2 bg-[#F8F9FA] px-6 py-3 rounded-2xl border border-stone-200/80">
-                    <span class="text-teal-700 font-bold">Phone:</span> 0912-345-678
+        <section id="contact" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-9 relative section-title">聯絡方式</h2>
+            <div class="contact-box">
+                <p class="text-lg mb-6">做事認真、勇於挑戰，歡迎與我聯繫！</p>
+                <div class="space-y-3 leading-relaxed">
+                    <p>Email: <a href="javascript:void(0);" onclick="copyToClipboard('yourname@example.com', '已複製 Email 聯絡信箱！')" title="點擊複製">yourname@example.com</a> <span class="text-xs opacity-75">(點擊複製)</span></p>
+                    <p>電話: <a href="javascript:void(0);" onclick="copyToClipboard('0912-345-678', '已複製電話號碼！')" title="點擊複製">0912-345-678</a> <span class="text-xs opacity-75">(點擊複製)</span></p>
                 </div>
             </div>
         </section>
 
-    </main>
+        <footer class="text-center py-8 text-[#456E5C] text-sm border-t border-[#bce1ce]">
+            &copy; 2026 [您的姓名]. 認真、細心、持續學習。
+        </footer>
+    </div>
 
-    <footer class="max-w-5xl mx-auto px-6 py-12 text-center text-xs text-stone-400 border-t border-stone-200/60 mt-16 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <span>&copy; 2026 Creative Portfolio. All Rights Reserved.</span>
-        <div class="flex gap-4">
-            <a href="#hero" class="hover:text-teal-700 transition-colors">Back to Top &uarr;</a>
-        </div>
-    </footer>
-
-    <!-- Certificate Detail Modal -->
-    <div id="certModal" class="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm hidden items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl border border-stone-200 relative transform transition-all animate-in fade-in zoom-in-95">
-            <button onclick="closeCertModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-stone-100 text-stone-600 flex items-center justify-center hover:bg-stone-200 transition-colors">
-                &times;
-            </button>
-            <div class="space-y-4">
-                <span id="modalCategory" class="text-[10px] font-bold tracking-widest text-teal-700 uppercase">Certification Details</span>
-                <h3 id="modalTitle" class="text-2xl font-serif-custom font-bold text-stone-900">證照名稱</h3>
-                <div class="w-full h-56 rounded-2xl overflow-hidden bg-stone-100 border border-stone-200 relative">
-                    <img id="modalImage" src="" alt="證書大圖" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x400/0f4c3a/ffffff?text=Certificate+Preview'">
-                </div>
-                <p id="modalDescription" class="text-xs md:text-sm text-stone-600 font-light leading-relaxed">
-                    證照詳細說明內容...
-                </p>
-                <div class="pt-4 flex justify-end">
-                    <button onclick="closeCertModal()" class="px-6 py-2 bg-teal-700 text-white text-xs font-semibold rounded-full hover:bg-teal-800 transition-colors">
-                        關閉視窗
-                    </button>
-                </div>
+    <div id="projectModal" class="fixed inset-0 bg-[#244837]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl transform scale-95 transition-transform duration-300 border border-[#bce1ce]" id="modalContainer">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-xl font-bold text-[#244837]">標題</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+            </div>
+            <div id="modalImageContainer" class="mb-4 hidden">
+                <img id="modalImage" src="" alt="證書預覽" class="w-full h-auto rounded-xl border border-[#bce1ce] object-cover aspect-[16/10]">
+            </div>
+            <p id="modalDesc" class="text-[#2E4F41] leading-relaxed mb-6">詳細說明內容...</p>
+            <div class="text-right">
+                <button onclick="closeModal()" class="bg-[#528D73] text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-[#43755e] transition">關閉視窗</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal Script -->
+    <div id="toast">已複製到剪貼簿！</div>
+
     <script>
-        function openCertModal(title, category, imgSrc, description) {
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalCategory').innerText = category;
-            document.getElementById('modalImage').src = imgSrc;
-            document.getElementById('modalDescription').innerText = description;
+        function openProjectModal(title, description) {
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+            const imgContainer = document.getElementById('modalImageContainer');
             
-            const modal = document.getElementById('certModal');
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = description;
+            imgContainer.classList.add('hidden');
+            
             modal.classList.remove('hidden');
-            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                container.classList.remove('scale-95');
+                container.classList.add('scale-100');
+            }, 10);
         }
 
-        function closeCertModal() {
-            const modal = document.getElementById('certModal');
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
+        function openCertModal(title, description, imgSrc) {
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+            const imgContainer = document.getElementById('modalImageContainer');
+            const modalImg = document.getElementById('modalImage');
+            
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = description;
+            modalImg.src = imgSrc;
+            imgContainer.classList.remove('hidden');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                container.classList.remove('scale-95');
+                container.classList.add('scale-100');
+            }, 10);
         }
 
-        // Close modal when clicking outside content
+        function closeModal() {
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+            modal.classList.add('opacity-0');
+            container.classList.remove('scale-100');
+            container.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function copyToClipboard(text, message) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(message);
+                }).catch(() => {
+                    fallbackCopyText(text, message);
+                });
+            } else {
+                fallbackCopyText(text, message);
+            }
+        }
+
+        function fallbackCopyText(text, message) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                var successful = document.execCommand('copy');
+                if (successful) {
+                    showToast(message);
+                } else {
+                    showToast("複製失敗，請手動複製");
+                }
+            } catch (err) {
+                showToast("複製失敗，請手動複製");
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.className = "show";
+            setTimeout(function(){ 
+                toast.className = toast.className.replace("show", ""); 
+            }, 3000);
+        }
+
         window.onclick = function(event) {
-            const modal = document.getElementById('certModal');
+            const modal = document.getElementById('projectModal');
             if (event.target === modal) {
-                closeCertModal();
+                closeModal();
             }
         }
     </script>
-
 </body>
 </html>
