@@ -1,6 +1,476 @@
 <!DOCTYPE html>
 <html lang="zh-Hant" class="scroll-smooth">
+<head><!DOCTYPE html>
+<html lang="zh-Hant" class="scroll-smooth">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個人介紹 | 數位行政專業</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-color: #E2F2EC;        /* 柔和清新薄荷綠底色 */
+            --primary-green: #528D73;   /* 葉片質感賽格綠 */
+            --dark-green: #244837;      /* 深森林綠標題與文字 */
+            --accent-cream: #FDF3D8;    /* 淡米黃花朵點綴色 */
+            --card-bg: #FFFFFF;
+            --text-color: #2E4F41;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.4) 0%, transparent 40%);
+        }
+
+        .profile-photo-wrapper {
+            width: 240px;
+            height: 240px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 6px solid var(--card-bg);
+            box-shadow: 0 12px 30px rgba(36, 72, 55, 0.12);
+            background-color: #eee;
+            transition: transform 0.5s ease;
+        }
+
+        .profile-photo:hover {
+            transform: scale(1.03);
+        }
+
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: var(--primary-green);
+            margin: 12px auto 0;
+            border-radius: 2px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 8px 25px rgba(36, 72, 55, 0.05);
+            text-align: justify;
+            border: 1px solid rgba(82, 141, 115, 0.15);
+        }
+
+        .skill-box {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 18px;
+            text-align: center;
+            border-bottom: 5px solid var(--primary-green);
+            box-shadow: 0 6px 20px rgba(36, 72, 55, 0.04);
+            border-left: 1px solid rgba(82, 141, 115, 0.15);
+            border-right: 1px solid rgba(82, 141, 115, 0.15);
+            border-top: 1px solid rgba(82, 141, 115, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .skill-box:hover {
+            transform: translateY(-10px);
+            background: #3E294E;
+            color: #FFFFFF;
+            border-bottom: 5px solid #9D75B2;
+            border-color: rgba(157, 117, 178, 0.3);
+            box-shadow: 0 16px 35px rgba(62, 41, 78, 0.3);
+        }
+
+        .skill-box:hover h3 {
+            color: #FDF3D8;
+        }
+
+        .skill-box:hover p {
+            color: #F0E6F5;
+        }
+
+        .cert-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(82, 141, 115, 0.2);
+            box-shadow: 0 6px 20px rgba(36, 72, 55, 0.05);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .cert-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 14px 30px rgba(82, 141, 115, 0.18);
+            border-color: var(--primary-green);
+        }
+
+        .cert-banner {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            background: #F2F9F5;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cert-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .cert-card:hover .cert-banner img {
+            transform: scale(1.04);
+        }
+
+        .contact-box {
+            background: var(--dark-green);
+            color: #FFFFFF;
+            padding: 50px 30px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(36, 72, 55, 0.15);
+        }
+
+        .contact-box a {
+            color: #FDF3D8;
+            font-weight: bold;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(253, 243, 216, 0.6);
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .contact-box a:hover {
+            opacity: 0.8;
+        }
+
+        #toast {
+            visibility: hidden;
+            min-width: 200px;
+            background-color: var(--dark-green);
+            color: #fff;
+            text-align: center;
+            border-radius: 12px;
+            padding: 14px;
+            position: fixed;
+            z-index: 100;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            font-size: 0.95rem;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            header h1 { font-size: 2.2rem; }
+            .profile-photo-wrapper { width: 200px; height: 200px; }
+            .container { padding: 40px 15px; }
+            .card { padding: 30px 20px; }
+        }
+    </style>
+</head>
+<body class="bg-[#E2F2EC] text-[#2E4F41]">
+
+    <nav class="sticky top-0 z-50 bg-[#E2F2EC]/90 backdrop-blur-md border-b border-[#bce1ce] py-4 px-6">
+        <div class="max-w-[850px] mx-auto flex justify-between items-center">
+            <span class="font-bold text-[#244837] tracking-wider flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-[#528D73]"></span>數位行政專員
+            </span>
+            <div class="space-x-3 md:space-x-6 text-sm md:text-base font-medium">
+                <a href="#about" class="text-[#244837] hover:text-[#528D73] transition">關於我</a>
+                <a href="#skills" class="text-[#244837] hover:text-[#528D73] transition">核心技能</a>
+                <a href="#certificates" class="text-[#244837] hover:text-[#528D73] transition">專業證照</a>
+                <a href="#portal" class="text-[#244837] hover:text-[#528D73] transition">專案入口</a>
+                <a href="#contact" class="text-[#244837] hover:text-[#528D73] transition">聯絡方式</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container max-w-[850px] mx-auto px-5 py-12 md:py-16">
+        <header class="text-center mb-16">
+            <div class="profile-photo-wrapper">
+                <img src="https://raw.githubusercontent.com/sunny0989586795-gif/portolio411/main/avatar.jpg" alt="個人照" class="profile-photo" onerror="this.src='https://placehold.co/400x400/244837/ffffff?text=Professional+Photo'">
+            </div>
+            <h1 class="text-3xl md:text-[2.6rem] font-bold text-[#244837] tracking-wider mb-2">[您的姓名]</h1>
+            <p class="text-lg text-[#528D73] font-medium bg-[#F2F9F5] inline-block px-4 py-1 rounded-full border border-[#bce1ce]">行政檢驗經驗 ✕ 數位辦公 AI 應用</p>
+        </header>
+
+        <section id="about" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-9 relative section-title">關於我</h2>
+            <div class="card">
+                <p>
+                    過去在行政助理與檢驗人員的工作中，我累積了跨領域的豐富經驗，並磨練出<b>細心、耐心與高度責任感</b>。我擅長有條理地處理行政庶務，並能嚴謹遵循標準流程確保工作的準確性。
+                </p>
+                <p class="mt-4">
+                    透過「數位辦公與AI應用實務」職訓，我精進了 <b>Excel 進階數據分析</b>（如 INDEX 函數、多表整理、自動化選單）與 AI 應用效能，將智慧科技融入日常行政。我是一位熱衷學習、做事認真的工作者，期待在未來的崗位上貢獻專業，成為團隊信賴的夥伴。
+                </p>
+            </div>
+        </section>
+
+        <section id="skills" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-9 relative section-title">核心技能</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div class="skill-box">
+                    <h3 class="text-[#244837] font-bold text-lg mb-3">專業文書行政</h3>
+                    <p class="text-sm text-[#3E6353]">精通 Word、PPT 操作，具備高效的文件組織與資料整理實務能力。</p>
+                </div>
+                <div class="skill-box">
+                    <h3 class="text-[#244837] font-bold text-lg mb-3">Excel 數據管理</h3>
+                    <p class="text-sm text-[#3E6353]">熟練函數運用、自動化選單設計與多張工作表之數據整合分析。</p>
+                </div>
+                <div class="skill-box">
+                    <h3 class="text-[#244837] font-bold text-lg mb-3">AI 效率應用</h3>
+                    <p class="text-sm text-[#3E6353]">善用 AI 進行資料彙整、文字修飾與內容發想，大幅提升工作產出品質。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="certificates" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-3 relative section-title">專業證照</h2>
+            <p class="text-center text-sm text-[#456E5C] mb-8">Google Certified 官方國際專業認證</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                <!-- 證照 1：Gemini 教育工作者 -->
+                <div class="cert-card">
+                    <div class="cert-banner">
+                        <img src="https://api.accredible.com/v1/frontend/credential_website_embed_image/certificate/191055627" alt="Gemini Educator 證書" onerror="this.src='https://placehold.co/600x400/528D73/ffffff?text=Gemini+Educator'">
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold tracking-widest text-[#528D73] uppercase block mb-1">GOOGLE CERTIFIED</span>
+                            <h3 class="text-[#244837] font-bold text-base mb-2">Gemini Educator</h3>
+                            <p class="text-xs text-[#3E6353] leading-relaxed mb-4">
+                                本認證證明您對 Gemini 的深入理解，以及在日常教學與行政中負責任地整合 Google AI 技術的能力，有效提升工作生產力、促進學習成效並創造創新的學習體驗，展現數位教學專業實力。
+                            </p>
+                        </div>
+                        <button onclick="openCertModal('Google 認證 Gemini 教育工作者 (Gemini Educator)', '本認證證明您對 Gemini 的深入理解，以及在日常教學與行政中負責任地整合 Google AI 技術的能力，有效提升工作生產力、促進學習成效並創造創新的學習體驗，展現數位教學專業實力。', 'https://api.accredible.com/v1/frontend/credential_website_embed_image/certificate/191055627', 'https://api.accredible.com/v1/frontend/credential_website_embed_image/certificate/191055627')" class="w-full bg-[#244837] hover:bg-[#3E294E] text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-sm">
+                            See Certification
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 證照 2：Gemini 教職員 -->
+                <div class="cert-card">
+                    <div class="cert-banner">
+                        <img src="https://api.accredible.com/v1/frontend/credential_website_embed_image/certificate/191066465?key=394c4bbe112c83afa28ec5c55e76b476420025737d27604a4d85efe2d5978132" alt="Gemini Faculty 證書" onerror="this.src='https://placehold.co/600x400/3E294E/ffffff?text=Gemini+Faculty'">
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold tracking-widest text-[#528D73] uppercase block mb-1">GOOGLE CERTIFIED</span>
+                            <h3 class="text-[#244837] font-bold text-base mb-2">Gemini Faculty</h3>
+                            <p class="text-xs text-[#3E6353] leading-relaxed mb-4">
+                                本認證肯定您在研究生產力、支援學生互動與設計創新課程方面，對 Gemini 與 Google AI 負責任整合應用的熟練掌握。透過先進 AI 工具，優化學術研究與教學設計，引領數位教育浪潮。
+                            </p>
+                        </div>
+                        <button onclick="openCertModal('Google 認證 Gemini 教職員 (Gemini Faculty)', '本認證肯定您在研究生產力、支援學生互動與設計創新課程方面，對 Gemini 與 Google AI 負責任整合應用的熟練掌握。透過先進 AI 工具，優化學術研究與教學設計，引領數位教育浪潮。', 'https://api.accredible.com/v1/frontend/credential_website_embed_image/certificate/191066465?key=394c4bbe112c83afa28ec5c55e76b476420025737d27604a4d85efe2d5978132', 'https://api.accredible.com/v1/frontend/credential_website_embed_image/certificate/191066465?key=394c4bbe112c83afa28ec5c55e76b476420025737d27604a4d85efe2d5978132')" class="w-full bg-[#244837] hover:bg-[#3E294E] text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-sm">
+                            See Certification
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 證照 3：Gemini 大學學生 -->
+                <div class="cert-card">
+                    <div class="cert-banner">
+                        <img src="https://api.accredible.com/v1/frontend/credential_website_embed_image/certificate/191071824" alt="Gemini University Student 證書" onerror="this.src='https://placehold.co/600x400/244837/ffffff?text=Gemini+Student'">
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <span class="text-[11px] font-bold tracking-widest text-[#528D73] uppercase block mb-1">GOOGLE CERTIFIED</span>
+                            <h3 class="text-[#244837] font-bold text-base mb-2">Gemini University Student</h3>
+                            <p class="text-xs text-[#3E6353] leading-relaxed mb-4">
+                                本認證彰顯您在進階研究、學術嚴謹性與職場就緒度上，對 Gemini 及 Google AI 負責任應用的卓越理解。具備運用 AI 提升專業研究與實務能力的競爭優勢，迎接未來挑戰。
+                            </p>
+                        </div>
+                        <button onclick="openCertModal('Google 認證 Gemini 大學學生 (Gemini University Student)', '本認證彰顯您在進階研究、學術嚴謹性與職場就緒度上，對 Gemini 及 Google AI 負責任應用的卓越理解。具備運用 AI 提升專業研究與實務能力的競爭優勢，迎接未來挑戰。', 'https://api.accredible.com/v1/frontend/credential_website_embed_image/certificate/191071824', 'https://api.accredible.com/v1/frontend/credential_website_embed_image/certificate/191071824')" class="w-full bg-[#244837] hover:bg-[#3E294E] text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-sm">
+                            See Certification
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 預留未來追加證照欄位 -->
+                <div class="cert-card border-2 border-dashed border-[#528D73]/40 bg-[#F2F9F5]/60 hover:bg-[#F2F9F5] cursor-pointer" onclick="openCertModal('新增證照預留位 (Future Slot)', '此為系統特別預留的擴充位置，方便您未來考取其他專業認證時隨時追加放置新的證書圖片與說明。', 'https://placehold.co/600x400/E2F2EC/528D73?text=Future+Certificate+Slot', '')">
+                    <div class="cert-banner bg-[#E2F2EC] flex items-center justify-center">
+                        <span class="text-4xl text-[#528D73] font-light">+</span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between text-center">
+                        <div>
+                            <span class="text-[11px] font-bold tracking-widest text-[#528D73] uppercase block mb-1">RESERVED SLOT</span>
+                            <h3 class="text-[#244837] font-bold text-base mb-2">新增證照預留位</h3>
+                            <p class="text-xs text-[#528D73] leading-relaxed mb-4">
+                                點擊查看未來擴充說明。此區塊已準備就緒，後續可輕鬆置入新證書與詳細介紹。
+                            </p>
+                        </div>
+                        <button class="w-full bg-[#528D73] hover:bg-[#43755e] text-white py-2.5 rounded-xl text-xs font-semibold transition shadow-sm">
+                            點擊查看說明
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="portal" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-3 relative section-title">精選專案快速入口</h2>
+            <p class="text-center text-sm text-[#456E5C] mb-8">點擊下方大按鈕即可前往互動作品與原始碼頁面</p>
+            
+            <div class="max-w-xl mx-auto">
+                <a href="https://github.com/sunny0989586795-gif/portolio411/blob/main/snake1.html" target="_blank" 
+                   class="group relative bg-[#244837] hover:bg-[#3E294E] text-white p-8 rounded-3xl shadow-xl transition-all duration-300 transform hover:-translate-y-2 flex items-center justify-between border-2 border-[#528D73]">
+                    <div class="flex items-center gap-6">
+                        <span class="text-4xl bg-white/15 p-4 rounded-2xl shadow-inner">🎮</span>
+                        <div>
+                            <span class="text-xs tracking-widest text-[#FDF3D8] font-semibold uppercase block mb-1">Interactive Web Project</span>
+                            <h3 class="text-xl md:text-2xl font-bold group-hover:text-[#FDF3D8] transition">網頁互動貪吃蛇遊戲 (Snake)</h3>
+                            <p class="text-xs md:text-sm text-[#bce1ce] mt-1">點擊前往 GitHub 檢視完整原始碼與預覽</p>
+                        </div>
+                    </div>
+                    <span class="text-3xl text-[#FDF3D8] transform group-hover:translate-x-2 transition-transform font-bold p-2">→</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="contact" class="mb-16 scroll-mt-24">
+            <h2 class="text-2xl font-bold text-[#244837] text-center mb-9 relative section-title">聯絡方式</h2>
+            <div class="contact-box">
+                <p class="text-lg mb-6">做事認真、勇於挑戰，歡迎與我聯繫！</p>
+                <div class="space-y-3 leading-relaxed">
+                    <p>Email: <a href="javascript:void(0);" onclick="copyToClipboard('yourname@example.com', '已複製 Email 聯絡信箱！')" title="點擊複製">yourname@example.com</a> <span class="text-xs opacity-75">(點擊複製)</span></p>
+                    <p>電話: <a href="javascript:void(0);" onclick="copyToClipboard('0912-345-678', '已複製電話號碼！')" title="點擊複製">0912-345-678</a> <span class="text-xs opacity-75">(點擊複製)</span></p>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center py-8 text-[#456E5C] text-sm border-t border-[#bce1ce]">
+            &copy; 2026 [您的姓名]. 認真、細心、持續學習。
+        </footer>
+    </div>
+
+    <div id="projectModal" class="fixed inset-0 bg-[#244837]/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl transform scale-95 transition-transform duration-300 border border-[#bce1ce]" id="modalContainer">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modalTitle" class="text-xl font-bold text-[#244837]">標題</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600 text-2xl font-bold">&times;</button>
+            </div>
+            <div id="modalImageContainer" class="mb-4 hidden">
+                <img id="modalImage" src="" alt="證書預覽" class="w-full h-auto rounded-xl border border-[#bce1ce] object-cover aspect-[16/10]">
+            </div>
+            <p id="modalDesc" class="text-[#2E4F41] leading-relaxed mb-6">詳細說明內容...</p>
+            <div class="flex justify-between items-center">
+                <div id="modalExternalLinkContainer"></div>
+                <button onclick="closeModal()" class="bg-[#528D73] text-white px-5 py-2 rounded-xl text-sm font-medium hover:bg-[#43755e] transition">關閉視窗</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">已複製到剪貼簿！</div>
+
+    <script>
+        function openCertModal(title, description, imgSrc, certUrl) {
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+            const imgContainer = document.getElementById('modalImageContainer');
+            const modalImg = document.getElementById('modalImage');
+            const extLinkContainer = document.getElementById('modalExternalLinkContainer');
+            
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = description;
+            modalImg.src = imgSrc;
+            imgContainer.classList.remove('hidden');
+            
+            if (certUrl) {
+                extLinkContainer.innerHTML = `<a href="${certUrl}" target="_blank" class="text-sm font-bold text-[#528D73] hover:underline flex items-center gap-1">🔗 Accredible 官方數位證書驗證</a>`;
+            } else {
+                extLinkContainer.innerHTML = '';
+            }
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                container.classList.remove('scale-95');
+                container.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('projectModal');
+            const container = document.getElementById('modalContainer');
+            modal.classList.add('opacity-0');
+            container.classList.remove('scale-100');
+            container.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function copyToClipboard(text, message) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast(message);
+                }).catch(() => {
+                    fallbackCopyText(text, message);
+                });
+            } else {
+                fallbackCopyText(text, message);
+            }
+        }
+
+        function fallbackCopyText(text, message) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                var successful = document.execCommand('copy');
+                if (successful) {
+                    showToast(message);
+                } else {
+                    showToast("複製失敗，請手動複製");
+                }
+            } catch (err) {
+                showToast("複製失敗，請手動複製");
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById("toast");
+            toast.innerText = msg;
+            toast.className = "show";
+            setTimeout(function(){ 
+                toast.className = toast.className.replace("show", ""); 
+            }, 3000);
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('projectModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>個人介紹 | 數位行政專業</title>
