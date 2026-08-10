@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 靈魂命理占卜 - 運勢・財富・緣份三牌陣</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Noto+Serif+TC:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Marked.js for Markdown Rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cosmic: {
+                            900: '#0a0518',
+                            800: '#130b2b',
+                            700: '#211347',
+                            gold: '#f3c669',
+                            goldLight: '#ffe5a3',
+                            purple: '#a855f7',
+                            pink: '#ec4899',
+                            cyan: '#06b6d4'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Noto Serif TC"', 'serif'],
+                        cinzel: ['"Cinzel"', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0a0518;
+            color: #e2e8f0;
+            font-family: 'Noto Serif TC', serif;
+            overflow-x: hidden;
+        }
+
+        /* 3D Flip Card Styles */
+        .card-perspective {
+            perspective: 1000px;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+        }
+        .card-inner.is-flipped {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+        }
+        .card-back {
+            transform: rotateY(180deg);
+        }
+
+        /* Glowing Aura Effects */
+        .glow-gold {
+            box-shadow: 0 0 25px rgba(243, 198, 105, 0.35);
+        }
+        .glow-purple {
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.35);
+        }
+        .text-glow-gold {
+            text-shadow: 0 0 10px rgba(243, 198, 105, 0.6);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #130b2b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3b2272;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a855f7;
+        }
+
+        /* Shimmer Animation */
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        .animate-shimmer {
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(243,198,105,0.2) 50%, rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite;
+        }
+
+        /* Float animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative selection:bg-cosmic-purple selection:text-white">
+
+    <!-- Starry background canvas -->
+    <canvas id="bgCanvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-0 opacity-60"></canvas>
+
+    <div class="relative z-10 max-w-5xl mx-auto px-4 py-6 w-full flex-grow flex flex-col">
+        
+        <!-- Header -->
+        <header class="text-center my-4 relative">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cosmic-800/80 border border-cosmic-gold/30 text-cosmic-gold text-xs font-medium tracking-widest uppercase mb-3 backdrop-blur-md">
+                <i class="fa-solid font-sparkles fa-wand-magic-sparkles"></i> AI Cosmic Oracle
+            </div>
+            <h1 class="text-3xl md:text-5xl font-black tracking-wide font-cinzel text-transparent bg-clip-text bg-gradient-to-r from-cosmic-goldLight via-cosmic-gold to-cosmic-purple text-glow-gold">
+                靈魂命理占卜
+            </h1>
+            <p class="text-xs md:text-sm text-purple-200/80 mt-2 max-w-md mx-auto">
+                融合當日天象磁場、個人出生密碼與經典塔羅聖牌，AI 深度解析您的運勢、財富與緣份
+            </p>
+        </header>
+
+        <!-- Step 1: User Info Input Card -->
+        <div id="stepInput" class="bg-cosmic-800/60 border border-cosmic-purple/30 backdrop-blur-xl rounded-2xl p-6 md:p-8 my-4 shadow-2xl transition-all duration-500">
+            <div class="max-w-xl mx-auto space-y-6">
+                
+                <!-- API Key Required Section -->
+                <div class="bg-cosmic-900/90 border border-cosmic-gold/40 rounded-xl p-4 shadow-inner">
+                    <label class="block text-xs font-semibold text-cosmic-gold mb-1 tracking-wider uppercase flex items-center justify-between">
+                        <span><i class="fa-solid fa-key mr-1"></i> Gemini API Key 密鑰（必填）</span>
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="text-[11px] text-cosmic-goldLight underline hover:text-white transition">
+                            <i class="fa-solid fa-arrow-up-right-from-square mr-1"></i>免費取得 Key
+                        </a>
+                    </label>
+                    <div class="relative flex items-center mt-2">
+                        <input type="password" id="apiKeyInput" placeholder="請在此貼上您的 Gemini API Key (AIzaSy...)" class="w-full bg-cosmic-800 border border-cosmic-purple/50 rounded-lg pl-3 pr-10 py-2.5 text-white text-xs md:text-sm focus:outline-none focus:border-cosmic-gold focus:ring-1 focus:ring-cosmic-gold transition">
+                        <button type="button" id="toggleApiKeyBtn" class="absolute right-3 text-purple-300/70 hover:text-cosmic-gold transition text-sm">
+                            <i class="fa-regular fa-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
+                    <p id="apiKeyWarning" class="text-[11px] text-red-400 mt-2 hidden flex items-center gap-1">
+                        <i class="fa-solid fa-circle-exclamation"></i> 請先輸入有效的 Gemini API Key 才能開啟占卜！
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Today Date Field (Auto set, editable) -->
+                    <div>
+                        <label class="block text-xs font-semibold text-cosmic-gold mb-2 tracking-wider uppercase">
+                            <i class="fa-regular fa-calendar-days mr-1"></i> 今日占算日期
+                        </label>
+                        <input type="date" id="currentDateInput" class="w-full bg-cosmic-900/80 border border-cosmic-purple/40 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cosmic-gold focus:ring-1 focus:ring-cosmic-gold transition">
+                    </div>
+
+                    <!-- Birth Date Field -->
+                    <div>
+                        <label class="block text-xs font-semibold text-cosmic-gold mb-2 tracking-wider uppercase">
+                            <i class="fa-solid fa-cake-candles mr-1"></i> 您的出生日期
+                        </label>
+                        <input type="date" id="birthDateInput" class="w-full bg-cosmic-900/80 border border-cosmic-purple/40 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cosmic-gold focus:ring-1 focus:ring-cosmic-gold transition">
+                    </div>
+                </div>
+
+                <!-- Info Badges (Zodiac & Life Path Number) -->
+                <div id="astrologyInfo" class="hidden grid-cols-2 gap-3 p-3 bg-cosmic-900/60 rounded-xl border border-cosmic-gold/20 text-xs">
+                    <div class="flex items-center gap-2 text-cosmic-goldLight">
+                        <i class="fa-solid fa-star text-cosmic-gold"></i>
+                        <span>太陽星座：<strong id="zodiacText" class="text-white">--</strong></span>
+                    </div>
+                    <div class="flex items-center gap-2 text-cosmic-goldLight">
+                        <i class="fa-solid fa-infinity text-cosmic-purple"></i>
+                        <span>生命靈數：<strong id="lifePathText" class="text-white">--</strong></span>
+                    </div>
+                </div>
+
+                <!-- Guidance & Intention -->
+                <div>
+                    <label class="block text-xs font-semibold text-cosmic-gold mb-2 tracking-wider uppercase">
+                        <i class="fa-solid fa-compass mr-1"></i> 當前求問心境或專注焦點（選填）
+                    </label>
+                    <input type="text" id="userFocusInput" placeholder="例如：最近職涯轉折、情感關係、近期財務規劃..." class="w-full bg-cosmic-900/80 border border-cosmic-purple/40 rounded-xl px-4 py-3 text-white text-sm focus:outline-none focus:border-cosmic-gold focus:ring-1 focus:ring-cosmic-gold transition placeholder-gray-500">
+                </div>
+
+                <!-- Start Button -->
+                <button id="startShuffleBtn" class="w-full py-4 rounded-xl bg-gradient-to-r from-cosmic-gold via-amber-400 to-cosmic-gold hover:from-amber-300 hover:to-cosmic-gold text-cosmic-900 font-bold text-base md:text-lg shadow-lg shadow-amber-500/20 transform hover:-translate-y-0.5 active:translate-y-0 transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-hands-sparkles"></i> 開啟靈魂感應與洗牌
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Interactive Deck & Card Draw -->
+        <div id="stepDeck" class="hidden flex-col items-center justify-center my-4 py-4 transition-all duration-500">
+            <div class="text-center mb-6">
+                <span id="drawStatusText" class="text-sm font-semibold text-cosmic-gold tracking-widest uppercase">
+                    請專注內心，依直覺從牌陣中抽選 3 張卡片
+                </span>
+                <p class="text-xs text-purple-300/70 mt-1">
+                    第 <span id="pickedCountText" class="text-cosmic-gold font-bold">0</span> / 3 張：<span id="nextSlotLabel" class="text-white font-medium">【整體運勢】</span>
+                </p>
+            </div>
+
+            <!-- Fanned Card Deck Container -->
+            <div id="deckContainer" class="relative w-full max-w-3xl h-56 md:h-64 flex items-center justify-center my-4 overflow-x-auto pb-4 px-8">
+                <!-- Cards will be dynamically generated here -->
+            </div>
+
+            <!-- Action controls -->
+            <div class="flex gap-4 mt-6">
+                <button id="reShuffleBtn" class="px-5 py-2.5 rounded-xl bg-cosmic-800 border border-cosmic-purple/40 text-purple-200 text-xs font-medium hover:bg-cosmic-700 transition flex items-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> 重新洗牌
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 3: Card Reveal & Three-Card Spread -->
+        <div id="stepSpread" class="hidden flex-col items-center my-4 transition-all duration-500">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-8">
+                
+                <!-- Slot 1: Fortune -->
+                <div class="bg-cosmic-800/40 border border-cosmic-purple/30 rounded-2xl p-4 flex flex-col items-center">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-6 h-6 rounded-full bg-amber-500/20 text-amber-300 flex items-center justify-center text-xs font-bold border border-amber-500/40">1</span>
+                        <h3 class="text-sm font-bold text-cosmic-gold tracking-wide">整體運勢</h3>
+                    </div>
+                    <div class="w-40 h-64 card-perspective cursor-pointer" onclick="flipCard(0)">
+                        <div id="cardInner-0" class="card-inner">
+                            <!-- Front (Card Back design) -->
+                            <div class="card-front bg-gradient-to-br from-cosmic-800 to-cosmic-900 border-2 border-cosmic-gold/50 rounded-xl shadow-xl flex flex-col items-center justify-center p-3 text-center glow-gold">
+                                <div class="w-full h-full border border-cosmic-gold/20 rounded-lg flex flex-col items-center justify-center p-2">
+                                    <i class="fa-solid fa-sun text-cosmic-gold text-2xl mb-2 animate-spin-slow"></i>
+                                    <span class="text-xs text-cosmic-goldLight font-cinzel">CLICK TO REVEAL</span>
+                                </div>
+                            </div>
+                            <!-- Back (Card Content) -->
+                            <div id="cardBack-0" class="card-back bg-gradient-to-b from-cosmic-800 via-cosmic-700 to-cosmic-900 border-2 border-cosmic-gold rounded-xl shadow-2xl p-4 flex flex-col justify-between text-center glow-gold">
+                                <!-- Card content rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                    <div id="cardMeta-0" class="mt-3 text-center">
+                        <p class="text-xs text-purple-300/60">尚未翻開</p>
+                    </div>
+                </div>
+
+                <!-- Slot 2: Wealth -->
+                <div class="bg-cosmic-800/40 border border-cosmic-purple/30 rounded-2xl p-4 flex flex-col items-center">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-xs font-bold border border-emerald-500/40">2</span>
+                        <h3 class="text-sm font-bold text-emerald-300 tracking-wide">財富機緣</h3>
+                    </div>
+                    <div class="w-40 h-64 card-perspective cursor-pointer" onclick="flipCard(1)">
+                        <div id="cardInner-1" class="card-inner">
+                            <!-- Front -->
+                            <div class="card-front bg-gradient-to-br from-cosmic-800 to-cosmic-900 border-2 border-emerald-500/40 rounded-xl shadow-xl flex flex-col items-center justify-center p-3 text-center glow-purple">
+                                <div class="w-full h-full border border-emerald-500/20 rounded-lg flex flex-col items-center justify-center p-2">
+                                    <i class="fa-solid fa-coins text-emerald-400 text-2xl mb-2"></i>
+                                    <span class="text-xs text-emerald-200 font-cinzel">CLICK TO REVEAL</span>
+                                </div>
+                            </div>
+                            <!-- Back -->
+                            <div id="cardBack-1" class="card-back bg-gradient-to-b from-cosmic-800 via-cosmic-700 to-cosmic-900 border-2 border-emerald-400 rounded-xl shadow-2xl p-4 flex flex-col justify-between text-center glow-purple">
+                                <!-- Content -->
+                            </div>
+                        </div>
+                    </div>
+                    <div id="cardMeta-1" class="mt-3 text-center">
+                        <p class="text-xs text-purple-300/60">尚未翻開</p>
+                    </div>
+                </div>
+
+                <!-- Slot 3: Fate / Relationship -->
+                <div class="bg-cosmic-800/40 border border-cosmic-purple/30 rounded-2xl p-4 flex flex-col items-center">
+                    <div class="flex items-center gap-2 mb-3">
+                        <span class="w-6 h-6 rounded-full bg-pink-500/20 text-pink-300 flex items-center justify-center text-xs font-bold border border-pink-500/40">3</span>
+                        <h3 class="text-sm font-bold text-pink-300 tracking-wide">緣份連結</h3>
+                    </div>
+                    <div class="w-40 h-64 card-perspective cursor-pointer" onclick="flipCard(2)">
+                        <div id="cardInner-2" class="card-inner">
+                            <!-- Front -->
+                            <div class="card-front bg-gradient-to-br from-cosmic-800 to-cosmic-900 border-2 border-pink-500/40 rounded-xl shadow-xl flex flex-col items-center justify-center p-3 text-center glow-purple">
+                                <div class="w-full h-full border border-pink-500/20 rounded-lg flex flex-col items-center justify-center p-2">
+                                    <i class="fa-solid fa-heart text-pink-400 text-2xl mb-2"></i>
+                                    <span class="text-xs text-pink-200 font-cinzel">CLICK TO REVEAL</span>
+                                </div>
+                            </div>
+                            <!-- Back -->
+                            <div id="cardBack-2" class="card-back bg-gradient-to-b from-cosmic-800 via-cosmic-700 to-cosmic-900 border-2 border-pink-400 rounded-xl shadow-2xl p-4 flex flex-col justify-between text-center glow-purple">
+                                <!-- Content -->
+                            </div>
+                        </div>
+                    </div>
+                    <div id="cardMeta-2" class="mt-3 text-center">
+                        <p class="text-xs text-purple-300/60">尚未翻開</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Trigger AI Analysis Button -->
+            <button id="generateAiAnalysisBtn" disabled class="px-8 py-4 rounded-xl bg-gradient-to-r from-cosmic-purple via-pink-600 to-cosmic-gold text-white font-bold text-base md:text-lg shadow-xl opacity-50 cursor-not-allowed transition hover:opacity-100 flex items-center gap-3">
+                <i class="fa-solid fa-brain"></i> 翻開全部卡片，啟動 Gemini AI 靈魂解析
+            </button>
+        </div>
+
+        <!-- Step 4: AI Analysis Output -->
+        <div id="stepAnalysis" class="hidden bg-cosmic-800/80 border border-cosmic-gold/30 backdrop-blur-2xl rounded-2xl p-6 md:p-8 my-6 shadow-2xl transition-all duration-500">
+            
+            <!-- Analysis Header & Control Bar -->
+            <div class="flex flex-col md:flex-row items-center justify-between pb-6 mb-6 border-b border-cosmic-purple/30 gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-cosmic-gold/20 border border-cosmic-gold/50 flex items-center justify-center text-cosmic-gold text-xl">
+                        <i class="fa-solid fa-crystal-ball"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white tracking-wide">AI 靈魂天象命理占算全書</h2>
+                        <p class="text-xs text-cosmic-goldLight" id="analysisSubtitle">對應：當日前運勢・財富脈動・緣份流轉</p>
+                    </div>
+                </div>
+
+                <!-- Voice / TTS Controls -->
+                <div class="flex items-center gap-2">
+                    <button id="ttsPlayBtn" class="px-4 py-2 rounded-xl bg-cosmic-purple/30 border border-cosmic-purple/60 text-cosmic-goldLight text-xs font-medium hover:bg-cosmic-purple/50 transition flex items-center gap-2">
+                        <i class="fa-solid fa-volume-high"></i> <span id="ttsBtnText">語音導讀占卜</span>
+                    </button>
+                    <button id="copyReadingBtn" class="px-4 py-2 rounded-xl bg-cosmic-900 border border-cosmic-purple/40 text-purple-200 text-xs font-medium hover:bg-cosmic-800 transition flex items-center gap-2">
+                        <i class="fa-regular fa-copy"></i> 複製籤詩解析
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="aiLoading" class="py-16 text-center space-y-4">
+                <div class="inline-block relative w-16 h-16">
+                    <div class="absolute top-0 left-0 w-full h-full border-4 border-cosmic-gold/20 border-t-cosmic-gold rounded-full animate-spin"></div>
+                    <div class="absolute top-2 left-2 w-12 h-12 border-4 border-cosmic-purple/20 border-t-cosmic-purple rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+                </div>
+                <p class="text-sm text-cosmic-gold font-medium animate-pulse">
+                    正在調取當天星象、計算出生靈數磁場與牌陣靈動...
+                </p>
+                <p class="text-xs text-purple-300/60">Gemini 3 Flash 推理演算中</p>
+            </div>
+
+            <!-- Markdown Output Container -->
+            <div id="aiOutput" class="hidden prose prose-invert max-w-none text-sm md:text-base leading-relaxed space-y-4 text-purple-100">
+                <!-- AI Generated Text goes here -->
+            </div>
+
+            <!-- Restart Button -->
+            <div class="mt-8 pt-6 border-t border-cosmic-purple/30 text-center">
+                <button id="restartBtn" class="px-6 py-3 rounded-xl bg-cosmic-900 border border-cosmic-gold/40 text-cosmic-gold font-medium text-sm hover:bg-cosmic-800 transition inline-flex items-center gap-2">
+                    <i class="fa-solid fa-arrows-rotate"></i> 再次進行占卜與心靈尋解答
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="relative z-10 text-center py-4 text-xs text-purple-300/40 border-t border-cosmic-purple/20 bg-cosmic-900/80 backdrop-blur">
+        <p>© AI Cosmic Oracle - 靈魂命理占卜工具 ｜ 僅供靈性心靈啟發參考</p>
+    </footer>
+
+    <script>
+        /* -------------------------------------------------------------
+           1. TAROT DECK DATA (22 Major Arcana Cards)
+           ------------------------------------------------------------- */
+        const TAROT_DECK = [
+            { id: 0, name: "愚者", nameEn: "The Fool", icon: "fa-person-walking-luggage", keywords: "新的開始、冒險、純真、潛能", element: "風" },
+            { id: 1, name: "魔術師", nameEn: "The Magician", icon: "fa-wand-magic-sparkles", keywords: "創造力、專注、顯化、資源", element: "水" },
+            { id: 2, name: "女祭司", nameEn: "The High Priestess", icon: "fa-moon", keywords: "直覺、潛意識、智慧、靜謐", element: "水" },
+            { id: 3, name: "皇后", nameEn: "The Empress", icon: "fa-crown", keywords: "豐盛、滋養、愛、自然", element: "土" },
+            { id: 4, name: "皇帝", nameEn: "The Emperor", icon: "fa-chess-king", keywords: "結構、權威、穩定、秩序", element: "火" },
+            { id: 5, name: "教皇", nameEn: "The Hierophant", icon: "fa-scroll", keywords: "指引、傳統、信念、智慧", element: "土" },
+            { id: 6, name: "戀人", nameEn: "The Lovers", icon: "fa-heart", keywords: "和諧、選擇、契合、連結", element: "風" },
+            { id: 7, name: "戰車", nameEn: "The Chariot", icon: "fa-shield-halved", keywords: "意志力、勝利、前進、克服", element: "水" },
+            { id: 8, name: "力量", nameEn: "Strength", icon: "fa-hand-holding-heart", keywords: "勇氣、包容、內在力量、柔克剛", element: "火" },
+            { id: 9, name: "隱士", nameEn: "The Hermit", icon: "fa-lantern", keywords: "尋求真理、內省、燈塔、孤獨", element: "土" },
+            { id: 10, name: "命運之輪", nameEn: "Wheel of Fortune", icon: "fa-dharmachakra", keywords: "轉機、週期、契機、宿命", element: "火" },
+            { id: 11, name: "正義", nameEn: "Justice", icon: "fa-scale-balanced", keywords: "平衡、真理、因果、公正", element: "風" },
+            { id: 12, name: "倒吊人", nameEn: "The Hanged Man", icon: "fa-rotate", keywords: "換位思考、臣服、等待、覺察", element: "水" },
+            { id: 13, name: "死神", nameEn: "Death", icon: "fa-skull", keywords: "蛻變、重生、終結、新篇章", element: "水" },
+            { id: 14, name: "節制", nameEn: "Temperance", icon: "fa-scale-unbalanced", keywords: "調和、中庸、煉金術、平衡", element: "火" },
+            { id: 15, name: "惡魔", nameEn: "The Devil", icon: "fa-spaghetti-monster-flying", keywords: "執著、慾望、制約、覺察影武者", element: "土" },
+            { id: 16, name: "高塔", nameEn: "The Tower", icon: "fa-bolt-lightning", keywords: "突破、覺醒、重組、真相大白", element: "火" },
+            { id: 17, name: "星星", nameEn: "The Star", icon: "fa-star font-bold", keywords: "希望、靈感、療癒、平靜", element: "風" },
+            { id: 18, name: "月亮", nameEn: "The Moon", icon: "fa-moon", keywords: "潛意識、幻象、直覺、夢境", element: "水" },
+            { id: 19, name: "太陽", nameEn: "The Sun", icon: "fa-sun", keywords: "活力、成功、清晰、喜悅", element: "火" },
+            { id: 20, name: "審判", nameEn: "Judgement", icon: "fa-bell", keywords: "號召、覺醒、召喚、新生", element: "火" },
+            { id: 21, name: "世界", nameEn: "The World", icon: "fa-globe", keywords: "圓滿、完成、統合、新循環", element: "土" }
+        ];
+
+        /* -------------------------------------------------------------
+           2. APP STATE VARIABLES
+           ------------------------------------------------------------- */
+        let shuffledDeck = [];
+        let pickedCards = []; // max 3 items: { cardObj, isReversed, positionName }
+        let isFlippedArray = [false, false, false];
+        let audioCtx = null;
+        let ttsAudioBuffer = null;
+        let currentAudioSource = null;
+        let isPlayingTts = false;
+        let generatedTextMarkdown = "";
+
+        /* -------------------------------------------------------------
+           3. INITIALIZATION ON PAGE LOAD
+           ------------------------------------------------------------- */
+        window.addEventListener('DOMContentLoaded', () => {
+            initBackgroundCanvas();
+            initDateInputs();
+            setupEventListeners();
+        });
+
+        function initDateInputs() {
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            document.getElementById('currentDateInput').value = todayStr;
+
+            // Default birthdate (optional placeholder default)
+            document.getElementById('birthDateInput').value = "1998-08-08";
+            updateAstrologyInfo();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('birthDateInput').addEventListener('change', updateAstrologyInfo);
+            document.getElementById('startShuffleBtn').addEventListener('click', startShufflePhase);
+            document.getElementById('reShuffleBtn').addEventListener('click', startShufflePhase);
+            document.getElementById('generateAiAnalysisBtn').addEventListener('click', generateAiFortuneReading);
+            document.getElementById('copyReadingBtn').addEventListener('click', copyReadingToClipboard);
+            document.getElementById('ttsPlayBtn').addEventListener('click', toggleTtsReading);
+            document.getElementById('restartBtn').addEventListener('click', resetApp);
+
+            // API Key Events
+            const apiKeyInput = document.getElementById('apiKeyInput');
+            const savedKey = localStorage.getItem('gemini_user_api_key');
+            if (savedKey) {
+                apiKeyInput.value = savedKey;
+            }
+
+            apiKeyInput.addEventListener('input', (e) => {
+                const val = e.target.value.trim();
+                if (val) {
+                    localStorage.setItem('gemini_user_api_key', val);
+                    document.getElementById('apiKeyWarning').classList.add('hidden');
+                } else {
+                    localStorage.removeItem('gemini_user_api_key');
+                }
+            });
+
+            document.getElementById('toggleApiKeyBtn').addEventListener('click', () => {
+                const eyeIcon = document.getElementById('eyeIcon');
+                if (apiKeyInput.type === 'password') {
+                    apiKeyInput.type = 'text';
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    apiKeyInput.type = 'password';
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            });
+        }
+
+        /* -------------------------------------------------------------
+           4. ASTROLOGY & NUMEROLOGY CALCULATION
+           ------------------------------------------------------------- */
+        function calculateZodiac(month, day) {
+            const dates = [20, 19, 21, 20, 21, 22, 23, 23, 23, 24, 23, 22];
+            const zodiacs = ["摩羯座", "水瓶座", "雙魚座", "牡羊座", "金牛座", "雙子座", "巨蟹座", "獅子座", "處女座", "天秤座", "天蠍座", "射手座"];
+            return day < dates[month - 1] ? zodiacs[month - 1] : zodiacs[month % 12];
+        }
+
+        function calculateLifePathNumber(dateString) {
+            if (!dateString) return "--";
+            const digits = dateString.replace(/\D/g, '');
+            let sum = digits.split('').reduce((acc, curr) => acc + parseInt(curr), 0);
+            while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
+                sum = sum.toString().split('').reduce((acc, curr) => acc + parseInt(curr), 0);
+            }
+            return sum;
+        }
+
+        function updateAstrologyInfo() {
+            const birthVal = document.getElementById('birthDateInput').value;
+            if (!birthVal) return;
+
+            const dateObj = new Date(birthVal);
+            const month = dateObj.getMonth() + 1;
+            const day = dateObj.getDate();
+
+            const zodiac = calculateZodiac(month, day);
+            const lifePath = calculateLifePathNumber(birthVal);
+
+            document.getElementById('zodiacText').innerText = zodiac;
+            document.getElementById('lifePathText').innerText = `靈數 ${lifePath}`;
+            document.getElementById('astrologyInfo').classList.remove('hidden');
+            document.getElementById('astrologyInfo').classList.add('grid');
+        }
+
+        /* -------------------------------------------------------------
+           5. DECK SHUFFLE & SELECTION MECHANISM
+           ------------------------------------------------------------- */
+        function startShufflePhase() {
+            // Check API Key
+            const apiKey = getApiKey();
+            if (!apiKey) {
+                const warningEl = document.getElementById('apiKeyWarning');
+                warningEl.classList.remove('hidden');
+                document.getElementById('apiKeyInput').focus();
+                return;
+            }
+
+            playMysticChime();
+            pickedCards = [];
+            isFlippedArray = [false, false, false];
+
+            // Deep clone & Shuffle
+            shuffledDeck = [...TAROT_DECK].sort(() => Math.random() - 0.5);
+
+            // Switch UI steps
+            document.getElementById('stepInput').classList.add('hidden');
+            document.getElementById('stepSpread').classList.add('hidden');
+            document.getElementById('stepAnalysis').classList.add('hidden');
+            
+            const stepDeck = document.getElementById('stepDeck');
+            stepDeck.classList.remove('hidden');
+            stepDeck.classList.add('flex');
+
+            renderDeckCards();
+            updateDeckStatus();
+        }
+
+        function getApiKey() {
+            const inputVal = document.getElementById('apiKeyInput').value.trim();
+            if (inputVal) return inputVal;
+            return localStorage.getItem('gemini_user_api_key') || "";
+        }
+
+        function renderDeckCards() {
+            const container = document.getElementById('deckContainer');
+            container.innerHTML = '';
+
+            const totalCards = 18; // Render 18 fan cards
+            for (let i = 0; i < totalCards; i++) {
+                const cardEl = document.createElement('div');
+                const offset = (i - totalCards / 2) * 18;
+                const rotate = (i - totalCards / 2) * 3.5;
+
+                cardEl.className = "absolute w-24 h-40 md:w-28 md:h-44 bg-gradient-to-br from-cosmic-800 to-cosmic-900 border border-cosmic-gold/40 rounded-xl shadow-lg cursor-pointer transform hover:-translate-y-4 hover:scale-105 transition-all duration-300 flex items-center justify-center p-2 group glow-gold";
+                cardEl.style.transform = `translateX(${offset}px) rotate(${rotate}deg)`;
+                cardEl.style.zIndex = i;
+
+                cardEl.innerHTML = `
+                    <div class="w-full h-full border border-cosmic-gold/20 rounded-lg flex flex-col items-center justify-center bg-cosmic-900/60 group-hover:border-cosmic-gold transition">
+                        <i class="fa-solid fa-sparkles text-cosmic-gold text-lg mb-1 group-hover:rotate-45 transition"></i>
+                        <span class="text-[10px] text-cosmic-goldLight font-cinzel">ORACLE</span>
+                    </div>
+                `;
+
+                cardEl.addEventListener('click', () => pickCardFromDeck(i, cardEl));
+                container.appendChild(cardEl);
+            }
+        }
+
+        function pickCardFromDeck(deckIndex, cardEl) {
+            if (pickedCards.length >= 3) return;
+
+            playCardFlipSound();
+
+            // Random orientation (upright or reversed)
+            const isReversed = Math.random() < 0.25; // 25% chance of reversed
+            const cardObj = shuffledDeck[deckIndex % shuffledDeck.length];
+
+            const slotNames = ["運勢", "財富", "緣份"];
+            pickedCards.push({
+                card: cardObj,
+                isReversed: isReversed,
+                slotName: slotNames[pickedCards.length]
+            });
+
+            // Card animation away
+            cardEl.style.opacity = '0';
+            cardEl.style.transform += ' translateY(-100px) scale(0.5)';
+            cardEl.style.pointerEvents = 'none';
+
+            updateDeckStatus();
+
+            if (pickedCards.length === 3) {
+                setTimeout(() => {
+                    setupSpreadPhase();
+                }, 600);
+            }
+        }
+
+        function updateDeckStatus() {
+            const slotNames = ["【整體運勢】", "【財富機緣】", "【緣份連結】"];
+            document.getElementById('pickedCountText').innerText = pickedCards.length;
+            if (pickedCards.length < 3) {
+                document.getElementById('nextSlotLabel').innerText = slotNames[pickedCards.length];
+            } else {
+                document.getElementById('drawStatusText').innerText = "三張牌陣已抽取完畢！準備揭牌";
+            }
+        }
+
+        /* -------------------------------------------------------------
+           6. SPREAD PHASE & CARD FLIPPING
+           ------------------------------------------------------------- */
+        function setupSpreadPhase() {
+            document.getElementById('stepDeck').classList.add('hidden');
+            document.getElementById('stepDeck').classList.remove('flex');
+
+            const stepSpread = document.getElementById('stepSpread');
+            stepSpread.classList.remove('hidden');
+            stepSpread.classList.add('flex');
+
+            // Reset back cards and meta info
+            for (let i = 0; i < 3; i++) {
+                const cardInner = document.getElementById(`cardInner-${i}`);
+                cardInner.classList.remove('is-flipped');
+
+                const cardData = pickedCards[i];
+                const cardBack = document.getElementById(`cardBack-${i}`);
+                const isRev = cardData.isReversed;
+
+                cardBack.innerHTML = `
+                    <div class="border border-cosmic-gold/30 rounded-lg h-full p-2 flex flex-col items-center justify-between bg-cosmic-900/80">
+                        <span class="text-[10px] font-bold tracking-widest text-cosmic-gold uppercase">${cardData.slotName}</span>
+                        <div class="my-2 transform ${isRev ? 'rotate-180' : ''}">
+                            <i class="fa-solid ${cardData.card.icon} text-3xl text-cosmic-gold"></i>
+                        </div>
+                        <div>
+                            <h4 class="text-sm font-bold text-white mb-0.5">${cardData.card.name} ${isRev ? '<span class="text-xs text-red-400">（逆位）</span>' : '<span class="text-xs text-emerald-400">（正位）</span>'}</h4>
+                            <p class="text-[10px] text-cosmic-goldLight font-cinzel">${cardData.card.nameEn}</p>
+                        </div>
+                        <p class="text-[10px] text-purple-200/80 mt-1 line-clamp-2">${cardData.card.keywords}</p>
+                    </div>
+                `;
+
+                document.getElementById(`cardMeta-${i}`).innerHTML = `
+                    <p class="text-xs font-semibold text-cosmic-gold">${cardData.card.name} ${isRev ? '(逆位)' : '(正位)'}</p>
+                    <p class="text-[11px] text-purple-300/60 mt-0.5">元素：${cardData.card.element}</p>
+                `;
+            }
+
+            checkAllFlippedState();
+        }
+
+        function flipCard(slotIndex) {
+            playCardFlipSound();
+            const cardInner = document.getElementById(`cardInner-${slotIndex}`);
+            cardInner.classList.toggle('is-flipped');
+            isFlippedArray[slotIndex] = cardInner.classList.contains('is-flipped');
+            checkAllFlippedState();
+        }
+
+        function checkAllFlippedState() {
+            const allFlipped = isFlippedArray.every(v => v === true);
+            const btn = document.getElementById('generateAiAnalysisBtn');
+            if (allFlipped) {
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.classList.add('animate-pulse', 'glow-gold');
+            } else {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.classList.remove('animate-pulse', 'glow-gold');
+            }
+        }
+
+        /* -------------------------------------------------------------
+           7. GEMINI AI INTEGRATION (LLM Fortune Analysis)
+           ------------------------------------------------------------- */
+        async function generateAiFortuneReading() {
+            const userKey = getApiKey();
+            if (!userKey) {
+                alert("請先輸入您的 Gemini API Key！");
+                resetApp();
+                return;
+            }
+
+            playMysticChime();
+
+            // Switch to Analysis View
+            document.getElementById('stepSpread').classList.add('hidden');
+            document.getElementById('stepSpread').classList.remove('flex');
+
+            const stepAnalysis = document.getElementById('stepAnalysis');
+            stepAnalysis.classList.remove('hidden');
+
+            document.getElementById('aiLoading').classList.remove('hidden');
+            document.getElementById('aiOutput').classList.add('hidden');
+
+            // Gather metadata
+            const currentDate = document.getElementById('currentDateInput').value;
+            const birthDate = document.getElementById('birthDateInput').value;
+            const userFocus = document.getElementById('userFocusInput').value || "無特別指定，請進行整體靈魂引導";
+            const zodiac = document.getElementById('zodiacText').innerText;
+            const lifePath = document.getElementById('lifePathText').innerText;
+
+            const c1 = pickedCards[0];
+            const c2 = pickedCards[1];
+            const c3 = pickedCards[2];
+
+            // Build Prompt for Gemini
+            const systemPrompt = `你是一位精通西方塔羅聖牌、現代占星學、生命靈數與東方磁場能量的資深靈性命理導師。
+你的語言風格深邃、優雅、溫暖且充滿心靈洞察力，善於將當前日期天象、問卜者出生天賦與牌陣相互呼應。
+請以清晰優美的 Markdown 格式輸出解析結果，內容需涵蓋：
+1. 【當日天象與靈魂氣場總結】：結合當日前日期 (${currentDate}) 與問卜者生日 (${birthDate} / 星座：${zodiac} / 生命靈數：${lifePath}) 的能量磁場。
+2. 【整體運勢 - ${c1.card.name}${c1.isReversed ? '（逆位）' : '（正位）'}】：針對當前氣場、心態與能量流動的深度洞察。
+3. 【財富機緣 - ${c2.card.name}${c2.isReversed ? '（逆位）' : '（正位）'}】：針對事業、金錢、豐盛導引與潛在機會的具體建議。
+4. 【緣份連結 - ${c3.card.name}${c3.isReversed ? '（逆位）' : '（正位）'}】：針對人際關係、情感連結、貴人運與心靈對應的開解。
+5. 【靈魂開運指南】：給予 1 個幸運色、1 個開運數字、與一段專屬心靈金句。`;
+
+            const userPrompt = `【今日占卜請求】
+- 占算日期：${currentDate}
+- 求問者生日：${birthDate} (星座：${zodiac} / 生命靈數：${lifePath})
+- 當前專注焦點/心境：${userFocus}
+
+【抽出的三張靈魂卡牌陣】：
+1. 第一張（整體運勢）：${c1.card.name}（${c1.isReversed ? '逆位' : '正位'}）- 象徵：${c1.card.keywords}
+2. 第二張（財富機緣）：${c2.card.name}（${c2.isReversed ? '逆位' : '正位'}）- 象徵：${c2.card.keywords}
+3. 第三張（緣份連結）：${c3.card.name}（${c3.isReversed ? '逆位' : '正位'}）- 象徵：${c3.card.keywords}
+
+請根據以上資料，為我推算今日至近期的運勢、財富與緣份全解析！`;
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${userKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: userPrompt }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message || "API Key 驗證失敗或請求有誤");
+                }
+
+                const resultText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+                if (resultText) {
+                    generatedTextMarkdown = resultText;
+                    document.getElementById('aiOutput').innerHTML = marked.parse(resultText);
+                    document.getElementById('aiLoading').classList.add('hidden');
+                    document.getElementById('aiOutput').classList.remove('hidden');
+
+                    // Pre-fetch TTS audio if needed
+                    prepareTtsAudio(resultText, userKey);
+                } else {
+                    throw new Error("無效的 response 結構");
+                }
+            } catch (err) {
+                console.error("AI 占算失敗：", err);
+                document.getElementById('aiLoading').classList.add('hidden');
+                document.getElementById('aiOutput').classList.remove('hidden');
+                document.getElementById('aiOutput').innerHTML = `
+                    <div class="p-4 bg-red-900/30 border border-red-500/50 rounded-xl text-red-200 text-center space-y-2">
+                        <i class="fa-solid fa-triangle-exclamation text-2xl text-red-400"></i>
+                        <p class="font-bold">靈魂連線失敗：${err.message}</p>
+                        <p class="text-xs text-red-300/80">請檢查輸入的 Gemini API Key 是否正確且有效。</p>
+                    </div>
+                `;
+            }
+        }
+
+        /* -------------------------------------------------------------
+           8. GEMINI TTS AUDIO GENERATION & PLAYBACK
+           ------------------------------------------------------------- */
+        async function prepareTtsAudio(fullText, userKey) {
+            if (!userKey) userKey = getApiKey();
+            if (!userKey) return;
+
+            // Extract a summary snippet (first ~200 chars) for comfortable speech reading
+            const plainText = fullText.replace(/[#*`_\[\]]/g, '').slice(0, 300);
+            const speechPrompt = `請以極其溫柔、祥和、富有靈性導師質感的語調朗讀以下籤詩占算摘要：\n${plainText}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: speechPrompt }] }],
+                generationConfig: {
+                    responseModalities: ["AUDIO"],
+                    speechConfig: {
+                        voiceConfig: { prebuiltVoiceConfig: { voiceName: "Aoede" } } // Smooth breezy female voice
+                    }
+                },
+                model: "gemini-2.5-flash-preview-tts"
+            };
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${userKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const part = result?.candidates?.[0]?.content?.parts?.[0];
+                const audioData = part?.inlineData?.data;
+                const mimeType = part?.inlineData?.mimeType;
+
+                if (audioData && mimeType) {
+                    const match = mimeType.match(/rate=(\d+)/);
+                    const sampleRate = match ? parseInt(match[1], 10) : 24000;
+                    const pcm16 = new Int16Array(base64ToArrayBuffer(audioData));
+                    const wavBlob = pcmToWav(pcm16, sampleRate);
+                    
+                    const audioUrl = URL.createObjectURL(wavBlob);
+                    const audio = new Audio(audioUrl);
+                    ttsAudioBuffer = audio;
+                }
+            } catch (err) {
+                console.warn("TTS Audio preparation fallback or unavailable:", err);
+            }
+        }
+
+        function toggleTtsReading() {
+            if (isPlayingTts) {
+                if (ttsAudioBuffer) ttsAudioBuffer.pause();
+                window.speechSynthesis.cancel();
+                isPlayingTts = false;
+                document.getElementById('ttsBtnText').innerText = "語音導讀占卜";
+                return;
+            }
+
+            if (ttsAudioBuffer) {
+                ttsAudioBuffer.play();
+                isPlayingTts = true;
+                document.getElementById('ttsBtnText').innerText = "停止播放";
+                ttsAudioBuffer.onended = () => {
+                    isPlayingTts = false;
+                    document.getElementById('ttsBtnText').innerText = "語音導讀占卜";
+                };
+            } else {
+                // Fallback to Web Speech API
+                const plainText = generatedTextMarkdown.replace(/[#*`_\[\]]/g, '');
+                const utterance = new SpeechSynthesisUtterance(plainText.slice(0, 400));
+                utterance.lang = 'zh-TW';
+                utterance.rate = 0.95;
+                window.speechSynthesis.speak(utterance);
+                isPlayingTts = true;
+                document.getElementById('ttsBtnText').innerText = "停止播放";
+
+                utterance.onend = () => {
+                    isPlayingTts = false;
+                    document.getElementById('ttsBtnText').innerText = "語音導讀占卜";
+                };
+            }
+        }
+
+        /* -------------------------------------------------------------
+           9. PCM TO WAV CONVERTER UTILITY
+           ------------------------------------------------------------- */
+        function base64ToArrayBuffer(base64) {
+            const binaryString = window.atob(base64);
+            const len = binaryString.length;
+            const bytes = new Uint8Array(len);
+            for (let i = 0; i < len; i++) {
+                bytes[i] = binaryString.charCodeAt(i);
+            }
+            return bytes.buffer;
+        }
+
+        function pcmToWav(pcmData, sampleRate = 24000) {
+            const numChannels = 1;
+            const byteRate = sampleRate * numChannels * 2;
+            const blockAlign = numChannels * 2;
+            const dataSize = pcmData.length * 2;
+            const buffer = new ArrayBuffer(44 + dataSize);
+            const view = new DataView(buffer);
+
+            function writeString(view, offset, string) {
+                for (let i = 0; i < string.length; i++) {
+                    view.setUint8(offset + i, string.charCodeAt(i));
+                }
+            }
+
+            writeString(view, 0, 'RIFF');
+            view.setUint32(4, 36 + dataSize, true);
+            writeString(view, 8, 'WAVE');
+            writeString(view, 12, 'fmt ');
+            view.setUint32(16, 16, true);
+            view.setUint16(20, 1, true);
+            view.setUint16(22, numChannels, true);
+            view.setUint32(24, sampleRate, true);
+            view.setUint32(28, byteRate, true);
+            view.setUint16(32, blockAlign, true);
+            view.setUint16(34, 16, true);
+            writeString(view, 36, 'data');
+            view.setUint32(40, dataSize, true);
+
+            let offset = 44;
+            for (let i = 0; i < pcmData.length; i++, offset += 2) {
+                view.setInt16(offset, pcmData[i], true);
+            }
+
+            return new Blob([buffer], { type: 'audio/wav' });
+        }
+
+        /* -------------------------------------------------------------
+           10. AUDIO SYNTHESIZER (Web Audio API Sound Effects)
+           ------------------------------------------------------------- */
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playMysticChime() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(528, now); // 528Hz Solfeggio frequency
+                osc.frequency.exponentialRampToValueAtTime(1056, now + 1.2);
+
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 1.5);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 1.5);
+            } catch (e) {
+                // Audio context not allowed without gesture
+            }
+        }
+
+        function playCardFlipSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.exponentialRampToValueAtTime(60, now + 0.15);
+
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.15);
+            } catch (e) {}
+        }
+
+        /* -------------------------------------------------------------
+           11. AUXILIARY UTILITIES & RESET
+           ------------------------------------------------------------- */
+        function copyReadingToClipboard() {
+            if (!generatedTextMarkdown) return;
+            const textToCopy = `✨ AI 靈魂命理占卜籤詩紀錄 ✨\n日期：${document.getElementById('currentDateInput').value}\n\n` + generatedTextMarkdown;
+
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = textToCopy;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                alert("已成功複製占卜解析內容至剪貼簿！");
+            } catch (err) {
+                console.error("複製失敗", err);
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        function resetApp() {
+            if (ttsAudioBuffer) ttsAudioBuffer.pause();
+            window.speechSynthesis.cancel();
+            isPlayingTts = false;
+
+            document.getElementById('stepAnalysis').classList.add('hidden');
+            document.getElementById('stepSpread').classList.add('hidden');
+            document.getElementById('stepDeck').classList.add('hidden');
+            
+            document.getElementById('stepInput').classList.remove('hidden');
+        }
+
+        /* -------------------------------------------------------------
+           12. COSMIC CANVAS BACKGROUND ANIMATION
+           ------------------------------------------------------------- */
+        function initBackgroundCanvas() {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            const stars = Array.from({ length: 80 }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5 + 0.5,
+                alpha: Math.random(),
+                speed: Math.random() * 0.01 + 0.005
+            }));
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                stars.forEach(star => {
+                    star.alpha += star.speed;
+                    if (star.alpha > 1 || star.alpha < 0) star.speed = -star.speed;
+
+                    ctx.beginPath();
+                    ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(243, 198, 105, ${Math.abs(star.alpha)})`;
+                    ctx.fill();
+                });
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+    </script>
+</body>
+</html>
