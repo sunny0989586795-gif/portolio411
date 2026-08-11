@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打地鼠遊戲</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfbf7; /* 米白底 */
+            touch-action: manipulation;
+        }
+        /* Mole pop up animation */
+        @keyframes popUp {
+            0% { transform: translateY(100%) scale(0.5); opacity: 0; }
+            60% { transform: translateY(-10%) scale(1.1); opacity: 1; }
+            100% { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .mole-appear {
+            animation: popUp 0.2s ease-out forwards;
+        }
+        /* Hit animation */
+        @keyframes hitEffect {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2) rotate(10deg); filter: brightness(1.3); }
+            100% { transform: scale(0); opacity: 0; }
+        }
+        .mole-hit {
+            animation: hitEffect 0.2s ease-in forwards;
+        }
+        /* Hammer swing animation */
+        @keyframes hammerSwing {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(-45deg) scale(0.9); }
+            100% { transform: rotate(0deg) scale(1); }
+        }
+        .hammer-swing {
+            animation: hammerSwing 0.15s ease-in-out;
+        }
+        /* Floating score animation */
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8); opacity: 1; }
+            100% { transform: translateY(-40px) scale(1.2); opacity: 0; }
+        }
+        .float-text {
+            animation: floatUp 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-between p-4 sm:p-6 text-slate-800">
+
+    <!-- Custom Hammer element -->
+    <div id="hammer" class="fixed pointer-events-none text-4xl sm:text-5xl z-50 transition-transform duration-75 origin-bottom-right hidden select-none drop-shadow-lg" style="margin-left: -10px; margin-top: -30px;">🔨</div>
+
+    <header class="w-full max-w-md text-center my-2">
+        <h1 class="text-3xl font-bold tracking-tight text-amber-900 mb-2">🐹 打地鼠遊戲</h1>
+        <p class="text-sm text-slate-600">點擊冒出來的地鼠獲得分數！</p>
+    </header>
+
+    <main class="w-full max-w-md flex flex-col items-center flex-1 justify-center">
+        <div class="grid grid-cols-3 gap-3 w-full mb-6 bg-amber-100/60 p-4 rounded-2xl shadow-inner border border-amber-200">
+            <div class="text-center">
+                <div class="text-xs font-semibold text-amber-800 uppercase tracking-wider">目前分數</div>
+                <div id="score" class="text-2xl font-bold text-amber-900">0</div>
+            </div>
+            <div class="text-center border-x border-amber-200">
+                <div class="text-xs font-semibold text-amber-800 uppercase tracking-wider">剩餘時間</div>
+                <div id="timer" class="text-2xl font-bold text-amber-900">60s</div>
+            </div>
+            <div class="text-center">
+                <div class="text-xs font-semibold text-amber-800 uppercase tracking-wider">最高紀錄</div>
+                <div id="highScore" class="text-2xl font-bold text-amber-900">0</div>
+            </div>
+        </div>
+
+        <div id="grid" class="grid grid-cols-3 gap-4 w-full max-w-[340px] aspect-square bg-amber-50 p-4 rounded-3xl shadow-xl border-4 border-amber-200/80 mb-6">
+            <!-- 9 Holes will be generated dynamically or statically -->
+        </div>
+
+        <div class="w-full flex flex-col sm:flex-row justify-center gap-3">
+            <button id="startBtn" onclick="startGame()" class="flex-1 py-4 px-6 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-bold rounded-2xl shadow-lg transition transform active:scale-95 text-lg">
+                開始遊戲
+            </button>
+            <button id="autoPlayBtn" onclick="toggleAutoPlay()" class="py-4 px-5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-2xl shadow-md transition transform active:scale-95 text-base flex items-center justify-center gap-2">
+                <span>🤖 自動帶打:</span>
+                <span id="autoPlayStatus" class="text-rose-600">關閉</span>
+            </button>
+        </div>
+    </main>
+
+    <!-- Game Over / Result Overlay -->
+    <div id="gameOverModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200">
+            <div class="text-5xl mb-3">🎉</div>
+            <h2 class="text-2xl font-bold text-slate-800 mb-1">時間到！</h2>
+            <p id="finalScoreText" class="text-slate-600 mb-6">你獲得了 0 分</p>
+            <button onclick="startGame()" class="w-full py-3.5 px-6 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-2xl shadow-md transition transform active:scale-95 text-base">
+                再玩一次
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const gridElement = document.getElementById('grid');
+        const scoreElement = document.getElementById('score');
+        const timerElement = document.getElementById('timer');
+        const highScoreElement = document.getElementById('highScore');
+        const startBtn = document.getElementById('startBtn');
+        const gameOverModal = document.getElementById('gameOverModal');
+        const finalScoreText = document.getElementById('finalScoreText');
+
+        let score = 0;
+        let timeLeft = 60;
+        let isPlaying = false;
+        let isAutoPlay = false; // 自動帶打開關狀態
+        let timerInterval = null;
+        let moleTimer = null;
+        let currentMoleIndex = null;
+        let activeMoleTimeout = null;
+        let autoPlayTimeout = null;
+
+        // Load high score from localStorage
+        let highScore = localStorage.getItem('whackHighScore') || 0;
+        highScoreElement.textContent = highScore;
+
+        // Initialize 9 holes
+        const holes = [];
+        for (let i = 0; i < 9; i++) {
+            const hole = document.createElement('div');
+            // 地洞用深灰色 bg-slate-700，圓形或圓角
+            hole.className = 'relative bg-slate-700 rounded-full aspect-square overflow-hidden shadow-inner flex items-center justify-center cursor-pointer select-none border-4 border-slate-800';
+            hole.dataset.index = i;
+            
+            // Inner mole element
+            const mole = document.createElement('div');
+            mole.className = 'absolute inset-0 flex items-center justify-center text-4xl sm:text-5xl transform translate-y-full opacity-0 transition-none pointer-events-none';
+            mole.innerHTML = '🐹';
+            
+            hole.appendChild(mole);
+            
+            // Click / Touch event
+            hole.addEventListener('pointerdown', (e) => {
+                e.preventDefault();
+                whack(i);
+            });
+
+            gridElement.appendChild(hole);
+            holes.push({ holeElement: hole, moleElement: mole });
+        }
+
+        // Hammer and Sound tracking
+        const hammer = document.getElementById('hammer');
+
+        document.addEventListener('pointermove', (e) => {
+            if (!isPlaying) {
+                hammer.classList.add('hidden');
+                return;
+            }
+            hammer.classList.remove('hidden');
+            hammer.style.left = e.clientX + 'px';
+            hammer.style.top = e.clientY + 'px';
+        });
+
+        document.addEventListener('pointerleave', () => {
+            hammer.classList.add('hidden');
+        });
+
+        // Web Audio API for sound effects
+        let audioCtx = null;
+        function playBonkSound() {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.1);
+                
+                gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.1);
+            } catch (e) {
+                // Ignore audio restrictions if blocked
+            }
+        }
+
+        function showFloatingText(holeEl, text) {
+            const rect = holeEl.getBoundingClientRect();
+            const floatEl = document.createElement('div');
+            floatEl.className = 'fixed z-50 text-amber-600 font-extrabold text-2xl pointer-events-none float-text';
+            floatEl.textContent = text;
+            floatEl.style.left = (rect.left + rect.width / 2 - 15) + 'px';
+            floatEl.style.top = (rect.top + rect.height / 2 - 20) + 'px';
+            document.body.appendChild(floatEl);
+            setTimeout(() => floatEl.remove(), 500);
+        }
+
+        function startGame() {
+            // Reset states
+            score = 0;
+            timeLeft = 60;
+            isPlaying = true;
+            scoreElement.textContent = score;
+            timerElement.textContent = timeLeft + 's';
+            startBtn.classList.add('hidden');
+            gameOverModal.classList.add('hidden');
+            gameOverModal.classList.remove('flex');
+
+            clearAllMoles();
+
+            // Start countdown timer
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft + 's';
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+
+            // Start mole spawner loop
+            nextMole();
+        }
+
+        function toggleAutoPlay() {
+            isAutoPlay = !isAutoPlay;
+            const statusEl = document.getElementById('autoPlayStatus');
+            const btnEl = document.getElementById('autoPlayBtn');
+            if (isAutoPlay) {
+                statusEl.textContent = '開啟';
+                statusEl.className = 'text-emerald-600 font-bold';
+                btnEl.classList.remove('bg-slate-200', 'text-slate-700');
+                btnEl.classList.add('bg-emerald-100', 'text-emerald-800', 'border', 'border-emerald-300');
+                if (isPlaying && currentMoleIndex !== null) {
+                    triggerAutoWhack();
+                }
+            } else {
+                statusEl.textContent = '關閉';
+                statusEl.className = 'text-rose-600';
+                btnEl.classList.remove('bg-emerald-100', 'text-emerald-800', 'border', 'border-emerald-300');
+                btnEl.classList.add('bg-slate-200', 'text-slate-700');
+                if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
+            }
+        }
+
+        function triggerAutoWhack() {
+            if (!isAutoPlay || !isPlaying || currentMoleIndex === null) return;
+            if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
+            // 模擬人類反應時間 150~300ms
+            const reactionDelay = 150 + Math.random() * 150;
+            autoPlayTimeout = setTimeout(() => {
+                if (isAutoPlay && isPlaying && currentMoleIndex !== null) {
+                    whack(currentMoleIndex);
+                }
+            }, reactionDelay);
+        }
+
+        function nextMole() {
+            if (!isPlaying) return;
+
+            // Clear previous mole if active
+            clearAllMoles();
+
+            // Pick random hole different from current if possible
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * 9);
+            } while (newIndex === currentMoleIndex && holes.length > 1);
+
+            currentMoleIndex = newIndex;
+            const target = holes[currentMoleIndex];
+
+            // Show mole
+            target.moleElement.classList.remove('opacity-0', 'mole-hit');
+            target.moleElement.classList.add('mole-appear', 'pointer-events-auto');
+
+            // 如果開啟自動帶打，觸發自動點擊
+            if (isAutoPlay) {
+                triggerAutoWhack();
+            }
+
+            // Mole stays up for exactly 1 second
+            const popDuration = 1000;
+            activeMoleTimeout = setTimeout(() => {
+                if (isPlaying && currentMoleIndex === newIndex) {
+                    hideMole(currentMoleIndex);
+                    // Schedule next mole immediately after hiding
+                    nextMole();
+                }
+            }, popDuration);
+        }
+
+        function hideMole(index) {
+            if (index !== null && holes[index]) {
+                const target = holes[index];
+                target.moleElement.classList.remove('mole-appear', 'pointer-events-auto');
+                target.moleElement.classList.add('opacity-0');
+                currentMoleIndex = null;
+            }
+        }
+
+        function clearAllMoles() {
+            if (activeMoleTimeout) clearTimeout(activeMoleTimeout);
+            if (autoPlayTimeout) clearTimeout(autoPlayTimeout);
+            holes.forEach(h => {
+                h.moleElement.classList.remove('mole-appear', 'mole-hit', 'pointer-events-auto');
+                h.moleElement.classList.add('opacity-0');
+            });
+            currentMoleIndex = null;
+        }
+
+        function whack(index) {
+            if (!isPlaying) return;
+
+            // Trigger hammer swing animation
+            hammer.classList.remove('hammer-swing');
+            void hammer.offsetWidth; // trigger reflow
+            hammer.classList.add('hammer-swing');
+
+            if (index === currentMoleIndex) {
+                // Successful hit!
+                score++;
+                scoreElement.textContent = score;
+
+                playBonkSound();
+                showFloatingText(holes[index].holeElement, '+1');
+
+                // Hit animation effect
+                const target = holes[index];
+                target.moleElement.classList.remove('mole-appear');
+                target.moleElement.classList.add('mole-hit');
+                target.moleElement.classList.remove('pointer-events-auto');
+
+                // Clear current mole timeout and trigger next mole right away
+                if (activeMoleTimeout) clearTimeout(activeMoleTimeout);
+                currentMoleIndex = null;
+
+                // Short delay before spawning next to feel responsive
+                setTimeout(() => {
+                    if (isPlaying) {
+                        nextMole();
+                    }
+                }, 200);
+            } else {
+                playBonkSound();
+            }
+            // 沒點到不扣分 (Missing doesn't deduct score)
+        }
+
+        function endGame() {
+            isPlaying = false;
+            clearInterval(timerInterval);
+            clearAllMoles();
+
+            // Update high score
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('whackHighScore', highScore);
+                highScoreElement.textContent = highScore;
+            }
+
+            // Show Game Over modal
+            finalScoreText.textContent = `你總共獲得了 ${score} 分！`;
+            gameOverModal.classList.remove('hidden');
+            gameOverModal.classList.add('flex');
+            startBtn.classList.remove('hidden');
+            startBtn.textContent = '重新開始';
+        }
+    </script>
+</body>
+</html>
